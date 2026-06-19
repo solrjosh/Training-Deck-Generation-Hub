@@ -120,6 +120,8 @@
     .deck-checkbox-card input[type="checkbox"] { accent-color: var(--color-orange); width: 18px; height: 18px; margin-right: 8px; cursor: pointer; }
     .deck-checkbox-card label { font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; }
     .deck-checkbox-card .deck-desc { font-size: 0.8rem; color: var(--color-text-muted); margin-top: 4px; padding-left: 26px; }
+    /* Deck-visibility filtering */
+    .deck-filtered { display: none !important; }
   </style>
 </head>
 <body>
@@ -352,7 +354,7 @@
           <p class="field-hint" style="margin-bottom:4px;">Badges indicate which deck(s) each toggle applies to. <span class="section-deck-badge badge-shared">Shared</span> <span class="section-deck-badge badge-req">Req Only</span> <span class="section-deck-badge badge-admin">Admin Only</span></p>
 
           <!-- Business Prime — Req only -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="req">
             <span class="toggle-label" id="label-business-prime">Business Prime <span class="section-deck-badge badge-req">Req</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-business-prime">
               <label><input type="radio" name="featureBusinessPrime" value="yes" checked /> Yes</label>
@@ -361,7 +363,7 @@
           </div>
 
           <!-- Approvals — Shared (Admin + Req) -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-approvals">Approvals <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-approvals">
               <label><input type="radio" name="featureApprovals" id="approvals-yes" value="yes" checked /> Yes</label>
@@ -382,7 +384,7 @@
           </div>
 
           <!-- Guided Buying Preferred — Shared -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-gb-preferred">Guided Buying — Preferred Policy <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-gb-preferred">
               <label><input type="radio" name="featureGuidedBuyingPreferred" id="gb-preferred-yes" value="yes" /> Yes</label>
@@ -413,7 +415,7 @@
           </div>
 
           <!-- Guided Buying Restricted — Shared -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-gb-restricted">Guided Buying — Restricted Policy <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-gb-restricted">
               <label><input type="radio" name="featureGuidedBuyingRestricted" value="yes" /> Yes</label>
@@ -433,7 +435,7 @@
           </div>
 
           <!-- Guided Buying Blocked — Shared -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-gb-blocked">Guided Buying — Blocked Policy <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-gb-blocked">
               <label><input type="radio" name="featureGuidedBuyingBlocked" value="yes" /> Yes</label>
@@ -453,7 +455,7 @@
           </div>
 
           <!-- Guided Buying Additional Preferences — Admin only -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="admin">
             <span class="toggle-label" id="label-gb-additional">Guided Buying — Additional Preferences <span class="section-deck-badge badge-admin">Admin</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-gb-additional">
               <label><input type="radio" name="featureGBAdditional" value="yes" /> Yes</label>
@@ -462,7 +464,7 @@
           </div>
 
           <!-- 3-Way Match — Shared -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-three-way-match">3-Way Match / Receiving <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-three-way-match">
               <label><input type="radio" name="featureThreeWayMatch" value="yes" checked /> Yes</label>
@@ -471,7 +473,7 @@
           </div>
 
           <!-- Business Giving — Shared -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-business-giving">Business Giving <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-business-giving">
               <label><input type="radio" name="featureBusinessGiving" id="bg-yes" value="yes" /> Yes</label>
@@ -489,7 +491,7 @@
           </div>
 
           <!-- Mobile App — Shared -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-mobile-app">Amazon Business Mobile App <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-mobile-app">
               <label><input type="radio" name="featureMobileApp" value="yes" checked /> Yes</label>
@@ -498,7 +500,7 @@
           </div>
 
           <!-- Blanket Purchase Orders — Shared (different slides per deck) -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-bpo">Blanket Purchase Orders (BPO) <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-bpo">
               <label><input type="radio" name="featureBlanketPOs" id="bpo-yes" value="yes" /> Yes</label>
@@ -559,7 +561,7 @@
           </div>
 
           <!-- Tax Exemptions — Shared -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="shared">
             <span class="toggle-label" id="label-tax-exemptions">Tax Exemptions <span class="section-deck-badge badge-shared">Shared</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-tax-exemptions">
               <label><input type="radio" name="featureTaxExemptions" value="yes" checked /> Yes</label>
@@ -568,7 +570,7 @@
           </div>
 
           <!-- Concur Reconciliation — Req only -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="req">
             <span class="toggle-label" id="label-concur">Concur Reconciliation <span class="section-deck-badge badge-req">Req</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-concur">
               <label><input type="radio" name="featureConcurReconciliation" value="yes" /> Yes</label>
@@ -577,7 +579,7 @@
           </div>
 
           <!-- Government Store — Req only -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="req">
             <span class="toggle-label" id="label-gov-store">Government Store / Section 889 <span class="section-deck-badge badge-req">Req</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-gov-store">
               <label><input type="radio" name="featureGovernmentStore" value="yes" /> Yes</label>
@@ -586,7 +588,7 @@
           </div>
 
           <!-- Your Catalog — Req only -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="req">
             <span class="toggle-label" id="label-your-catalog">Your Catalog <span class="section-deck-badge badge-req">Req</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-your-catalog">
               <label><input type="radio" name="featureYourCatalog" value="yes" /> Yes</label>
@@ -595,7 +597,7 @@
           </div>
 
           <!-- Business Order Information — Admin only -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="admin">
             <span class="toggle-label" id="label-boi">Business Order Information (BOI) <span class="section-deck-badge badge-admin">Admin</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-boi">
               <label><input type="radio" name="featureBOI" id="boi-yes" value="yes" /> Yes</label>
@@ -617,7 +619,7 @@
           </div>
 
           <!-- Debarment Policies — Admin only -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="admin">
             <span class="toggle-label" id="label-debarment">Debarment Policies <span class="section-deck-badge badge-admin">Admin</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-debarment">
               <label><input type="radio" name="featureDebarment" value="yes" /> Yes</label>
@@ -626,7 +628,7 @@
           </div>
 
           <!-- Certifications — Admin only -->
-          <div class="toggle-row">
+          <div class="toggle-row" data-deck="admin">
             <span class="toggle-label" id="label-certifications">Certifications <span class="section-deck-badge badge-admin">Admin</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="label-certifications">
               <label><input type="radio" name="featureCertifications" value="yes" /> Yes</label>
@@ -1615,14 +1617,89 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
     }
 
     function _updateDeckCards() {
-      const reqChecked = document.getElementById('deck-req').checked;
+      const reqChecked   = document.getElementById('deck-req').checked;
       const adminChecked = document.getElementById('deck-admin').checked;
+      const both = reqChecked && adminChecked;
+      const neitherOrBoth = both || (!reqChecked && !adminChecked);
+
       document.getElementById('req-deck-card').classList.toggle('selected', reqChecked);
       document.getElementById('admin-deck-card').classList.toggle('selected', adminChecked);
       document.getElementById('req-file-card').classList.toggle('dimmed', !reqChecked);
       document.getElementById('admin-file-card').classList.toggle('dimmed', !adminChecked);
+
       const adminSection = document.getElementById('admin-specific-section');
       if (adminSection) adminSection.style.display = adminChecked ? '' : 'none';
+      const reqSection = document.getElementById('req-specific-section');
+      if (reqSection) reqSection.style.display = reqChecked ? '' : 'none';
+
+      // Show/hide toggle rows based on deck selection
+      // data-deck="req"    → show only when Req is selected
+      // data-deck="admin"  → show only when Admin is selected
+      // data-deck="shared" → show when either is selected
+      document.querySelectorAll('[data-deck]').forEach(el => {
+        const deck = el.getAttribute('data-deck');
+        let visible = false;
+        if (deck === 'req')    visible = reqChecked;
+        if (deck === 'admin')  visible = adminChecked;
+        if (deck === 'shared') visible = reqChecked || adminChecked;
+        el.classList.toggle('deck-filtered', !visible);
+        // Also hide sub-fields that follow a deck-filtered toggle row
+        // (sub-fields inherit their parent's visibility)
+      });
+
+      // Hide sub-fields whose parent toggle-row is deck-filtered
+      document.querySelectorAll('.sub-fields').forEach(sf => {
+        // Find the preceding toggle row with a data-deck attribute
+        let prev = sf.previousElementSibling;
+        while (prev && !prev.hasAttribute('data-deck')) prev = prev.previousElementSibling;
+        if (prev && prev.classList.contains('deck-filtered')) {
+          sf.classList.add('deck-filtered');
+        } else {
+          sf.classList.remove('deck-filtered');
+        }
+      });
+
+      // Hide/show Req-only fields inside shared sections
+      const reqOnlyFields = ['categories-field-group', 'account-authority-row'];
+      // Categories in scope — only show for Req
+      const catField = document.getElementById('categories-in-scope')?.closest('.field-group');
+      if (catField) catField.classList.toggle('deck-filtered', !reqChecked);
+      // Account Authority row — only show for Req
+      const aaRow = document.getElementById('label-account-authority')?.closest('.toggle-row');
+      if (aaRow) aaRow.classList.toggle('deck-filtered', !reqChecked);
+      // AUC sub-fields follow AA row
+      const aucSub = document.getElementById('auc-sub-fields');
+      if (aucSub) aucSub.classList.toggle('deck-filtered', !reqChecked);
+      // Approvals scope sub-field — only relevant for Req (Admin has it but no scope sub-toggle)
+      // Keep visible for both since it's genuinely shared
+
+      // SSO fields — show Admin SSO link/screenshot only when Admin selected
+      ['sso-link','sso-screenshot','sso-link-po','sso-screenshot-po'].forEach(id => {
+        const el = document.getElementById(id)?.closest('.field-group');
+        if (el) el.classList.toggle('deck-filtered', !adminChecked);
+      });
+      // IDP field — only for Req
+      const idpField = document.getElementById('identity-provider')?.closest('.field-group');
+      if (idpField) idpField.classList.toggle('deck-filtered', !reqChecked);
+      // ePro tile screenshot — only for Req
+      const eproTileField = document.getElementById('epro-tile-screenshot-field');
+      if (eproTileField) eproTileField.classList.toggle('deck-filtered', !reqChecked);
+
+      // Sub-fields inside gb-preferred: hide Req-only fields when Req not selected
+      // and Admin-only fields when Admin not selected
+      const prefAsins = document.getElementById('preferred-asins')?.closest('.field-group');
+      if (prefAsins) prefAsins.classList.toggle('deck-filtered', !reqChecked);
+      const prefLink = document.getElementById('preferred-list-link')?.closest('.field-group');
+      if (prefLink) prefLink.classList.toggle('deck-filtered', !reqChecked);
+      const adminPrefItems = document.getElementById('admin-preferred-items')?.closest('.field-group');
+      if (adminPrefItems) adminPrefItems.classList.toggle('deck-filtered', !adminChecked);
+      const adminPrefMsg = document.getElementById('admin-preferred-messaging')?.closest('.field-group');
+      if (adminPrefMsg) adminPrefMsg.classList.toggle('deck-filtered', !adminChecked);
+      // Restricted/blocked sub-fields (Admin-only)
+      ['restricted-categories','restricted-messaging','blocked-categories','blocked-messaging'].forEach(id => {
+        const el = document.getElementById(id)?.closest('.field-group');
+        if (el) el.classList.toggle('deck-filtered', !adminChecked);
+      });
     }
 
     function _onChange() { _updateConditionalFields(); StorageManager.save(getFormState()); }
