@@ -744,39 +744,39 @@
         </div>
       </div>
 
-      <!-- Section: Launch Communications -->
-      <section class="form-section" aria-labelledby="s-comms-heading" style="margin-top:16px;border-left:4px solid #ff9900;">
-        <div class="form-section__header" style="background:#7D6608;" id="s-comms-heading">📣 Launch Communications <span class="section-deck-badge" style="background:#FFF8E7;color:#7D6608;">Optional</span></div>
-        <div class="form-section__body">
-          <p class="field-hint">Generate a branded communication plan and ready-to-send email templates for this customer's Amazon Business launch. Customer details from Section 3 will be pre-populated automatically.</p>
-          <div style="background:#FFFBF0;border:1px solid #F0A500;border-radius:4px;padding:12px 16px;margin-bottom:8px;font-size:.85rem;">
-            <strong>What you'll get:</strong> Pre-Launch email, Training invitation, Quick Start Guide, Go-Live announcement, Launch poster, Intranet banner, and 30-day adoption follow-up — all branded with the customer name and categories.
+    </form>
+
+    <!-- Launch Communications — outside the form to avoid deck-filter JS interference -->
+    <section class="form-section" style="margin-top:16px;border-left:4px solid #ff9900;">
+      <div class="form-section__header" style="background:#7D6608;">📣 Launch Communications <span class="section-deck-badge" style="background:#FFF8E7;color:#7D6608;">Optional</span></div>
+      <div class="form-section__body">
+        <p class="field-hint">Generate a branded communication plan and ready-to-send email templates for this customer's Amazon Business launch. Customer details from Section 3 will be pre-populated automatically.</p>
+        <div style="background:#FFFBF0;border:1px solid #F0A500;border-radius:4px;padding:12px 16px;margin-bottom:8px;font-size:.85rem;">
+          <strong>What you'll get:</strong> Pre-Launch email, Training invitation, Quick Start Guide, Go-Live announcement, Launch poster, Intranet banner, and 30-day adoption follow-up — all branded with the customer name and categories.
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div class="field-group" style="flex:1;min-width:200px;margin:0;">
+            <label for="comm-go-live">Go-Live Date for Communications</label>
+            <input type="date" id="comm-go-live" />
+            <span class="field-hint">Leave blank to use the same go-live date as the training deck (if set).</span>
           </div>
-          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-            <div class="field-group" style="flex:1;min-width:200px;margin:0;">
-              <label for="comm-go-live">Go-Live Date for Communications</label>
-              <input type="date" id="comm-go-live" name="commGoLive" />
-              <span class="field-hint">Leave blank to use the same go-live date as the training deck (if set).</span>
-            </div>
-            <div class="field-group" style="min-width:200px;margin:0;">
-              <label for="comm-tone">Communication Tone</label>
-              <select id="comm-tone" name="commTone">
-                <option value="balanced">General Awareness (recommended)</option>
-                <option value="formal">Formal &amp; Policy-Focused</option>
-                <option value="casual">Casual &amp; Engaging</option>
-              </select>
-            </div>
-          </div>
-          <div style="margin-top:12px;">
-            <button type="button" class="btn btn-primary" onclick="openCommHub()" style="background:#ff9900;color:#232f3e;">
-              📣 Open Communication Planning Hub →
-            </button>
-            <span style="font-size:.8rem;color:#565959;margin-left:12px;">Opens in a new tab with customer details pre-populated.</span>
+          <div class="field-group" style="min-width:200px;margin:0;">
+            <label for="comm-tone">Communication Tone</label>
+            <select id="comm-tone">
+              <option value="balanced">General Awareness (recommended)</option>
+              <option value="formal">Formal &amp; Policy-Focused</option>
+              <option value="casual">Casual &amp; Engaging</option>
+            </select>
           </div>
         </div>
-      </section>
-
-    </form>
+        <div style="margin-top:12px;">
+          <button type="button" class="btn btn-primary" onclick="openCommHub()" style="background:#ff9900;color:#232f3e;">
+            📣 Open Communication Planning Hub →
+          </button>
+          <span style="font-size:.8rem;color:#565959;margin-left:12px;">Opens in a new tab with customer details pre-populated.</span>
+        </div>
+      </div>
+    </section>
 
     <!-- Error Banner -->
     <div class="error-banner" id="error-banner" role="alert" aria-live="assertive">
