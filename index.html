@@ -424,9 +424,9 @@
           </div>
           <div class="sub-fields hidden" id="gb-restricted-sub-fields">
             <div class="field-group">
-              <label for="restricted-categories">Restricted Categories <span class="section-deck-badge badge-admin">Admin Slide 31</span></label>
+              <label for="restricted-categories">Restricted Categories <span class="section-deck-badge badge-admin">Admin Slide 31</span> <span class="section-deck-badge badge-req">Req Slide 46</span></label>
               <textarea id="restricted-categories" name="restrictedCategories" placeholder="Enter each restricted category on a new line, e.g.:&#10;Office Supplies / 44121500&#10;IT Equipment / 43211500" style="min-height:90px;"></textarea>
-              <span class="field-hint">Replaces "Name/UNSPSC" bullet items on Admin Slide 31. One per line.</span>
+              <span class="field-hint">Replaces "Name/UNSPSC" bullet items on Admin Slide 31 and Req Slide 46. One per line.</span>
             </div>
             <div class="field-group">
               <label for="restricted-messaging">Restricted Policy Messaging <span class="section-deck-badge badge-admin">Admin</span></label>
@@ -857,6 +857,7 @@
   const REQ_SLIDE_FILTER_RULES = [
     { slides: [19,23,26,30,49,50,51,52,55,57,58,59,60,61,62,63,64,65,66], condition: s => s.ingressDirectAccess && !s.ingressPunchout, reason: 'Direct Access only — Punchout slides not applicable' },
     { slides: [20,24,68], condition: s => s.ingressPunchout && !s.ingressDirectAccess, reason: 'Punchout only — Direct Access slides not applicable' },
+    { slides: [67], condition: s => s.ingressPunchout, reason: 'Punchout selected — marketplace browsing slide not applicable (users browse via eProcurement system)' },
     { slides: [15], condition: s => !(s.ingressPunchout && !s.punchoutSso), reason: 'Registration scenario: Punchout without SSO not selected' },
     { slides: [16], condition: s => !(s.ingressPunchout && s.punchoutSso), reason: 'Registration scenario: Punchout with SSO not selected' },
     { slides: [17], condition: s => !(s.ingressDirectAccess && !s.directAccessSso), reason: 'Registration scenario: Direct Access without SSO not selected' },
@@ -907,7 +908,7 @@
     { slides: [39,40,41,42,43], condition: s => !s.features.approvals, reason: 'Feature not in scope: Approvals' },
     { slides: [44,45,46,47,48,49,50], condition: s => !s.features.businessGiving, reason: 'Feature not in scope: Business Giving' },
     { slides: [49,50], condition: s => s.features.businessGiving && !s.features.bgInternal, reason: 'Internal Campaigns not in scope' },
-    { slides: [51,52,53,54,55,56,57], condition: s => !s.features.threeWayMatch, reason: 'Feature not in scope: 3-Way Match / Receiving' },
+    { slides: [19,51,52,53,54,55,56,57], condition: s => !s.features.threeWayMatch, reason: 'Feature not in scope: 3-Way Match / Receiving' },
     { slides: [52,53,54,55,56], condition: s => s.features.threeWayMatch && s.ingressPunchout, reason: 'Mobile barcode scanning not applicable for Punchout' },
   ];
 
@@ -1053,6 +1054,8 @@
       if (formState && !formState.ingressPunchout) removeParagraphsContaining.push('[For Punchout]');
       const ssoInUse = formState && ((formState.ingressDirectAccess && formState.directAccessSso) || (formState.ingressPunchout && formState.punchoutSso));
       if (!ssoInUse) removeParagraphsContaining.push('[For SSO]');
+      // Remove the tax exemption bullet on the Common Support Questions slide when Tax Exemptions is off
+      if (formState && !formState.features?.taxExemptions) removeParagraphsContaining.push('Remove if no tax exemption');
 
       for (const filePath of retainedSlideFiles) {
         const zipEntry = zip.file(filePath); if (!zipEntry) continue;
@@ -1074,6 +1077,7 @@
             if (hasCompleteToken) return fullPara;
             const combinedText = runMatches.map(r => r.text).join('');
             if (!/\{\{[^}]+\}\}/.test(combinedText)) return fullPara;
+            // Strategy 1: find slices whose combined text is purely a token
             let newBody = pBody;
             for (let i = 0; i < runMatches.length - 1; i++) {
               for (let j = i + 1; j < Math.min(i + 6, runMatches.length); j++) {
@@ -1088,6 +1092,35 @@
                 }
               }
             }
+            // Strategy 2: token spans runs but paragraph has other content too.
+            // Scan for {{ opener and }} closer across adjacent runs and consolidate just the token fragment.
+            {
+              const allRuns = [];
+              const rp = /<a:r>([\s\S]*?)<\/a:r>/g; let rm3;
+              while ((rm3 = rp.exec(newBody)) !== null) {
+                const tM = rm3[1].match(/<a:t[^>]*>([^<]*)<\/a:t>/);
+                allRuns.push({ full: rm3[0], text: tM ? tM[1] : '', index: rm3.index });
+              }
+              for (let i = 0; i < allRuns.length; i++) {
+                if (!allRuns[i].text.includes('{{')) continue;
+                for (let j = i; j < Math.min(i + 6, allRuns.length); j++) {
+                  const span = allRuns.slice(i, j + 1);
+                  const spanText = span.map(r => r.text).join('');
+                  if (!spanText.includes('{{') || !spanText.includes('}}')) continue;
+                  // Find all tokens in the combined span
+                  const tokensFound = spanText.match(/\{\{[^}]+\}\}/g);
+                  if (!tokensFound || span.length === 1) break; // single run already handled
+                  // Rebuild the span into a single run preserving surrounding non-token text
+                  const firstRPr = span[0].full.match(/<a:rPr[\s\S]*?(?:\/>|<\/a:rPr>)/)?.[0] || '<a:rPr lang="en-US" dirty="0"/>';
+                  const mergedRun = `<a:r>${firstRPr}<a:t>${spanText}</a:t></a:r>`;
+                  const spanFull = span.map(r => r.full).join('');
+                  if (newBody.includes(spanFull)) {
+                    newBody = newBody.replace(spanFull, mergedRun);
+                  }
+                  break;
+                }
+              }
+            }
             return pOpen + newBody + pClose;
           });
         }
@@ -1098,7 +1131,10 @@
           if (spPr.includes('FFFF00')) return '';
           if (shape.includes('FF0000')) {
             const shapeText = (shape.match(/<a:t[^>]*>([^<]*)<\/a:t>/g)||[]).map(t=>t.replace(/<[^>]+>/g,'')).join(' ');
-            const isAuthoringNote = /DO\s*&(?:amp;)?\s*DELETE|DELETE\s*IF|DELETE:\s*IF|REMOVE\s*IF|PUNCHOUT\s*ONLY|REPLACE\s*WITH|Update\s*(image|screenshot)|Adjust\s*top/i.test(shapeText);
+            // Only remove the shape if the authoring instruction IS the primary content
+            // (i.e. the shape text is short and dominated by the instruction, not a content shape with an inline note)
+            const isShortAuthoringShape = shapeText.trim().length < 200;
+            const isAuthoringNote = isShortAuthoringShape && /DO\s*&(?:amp;)?\s*DELETE|DELETE\s*IF|DELETE:\s*IF|REMOVE\s*IF|PUNCHOUT\s*ONLY|REPLACE\s*WITH|Update\s*(image|screenshot)|Adjust\s*top|Modify\s*to\s*(mirror|reflect|update|show|match)|highlight\s*account/i.test(shapeText);
             if (isAuthoringNote) return '';
           }
           return shape;
@@ -1113,7 +1149,7 @@
         }
 
         // Token substitution — skip internal bulk tokens
-        const BULK_TOKENS = ['__RESTRICTED_CATS__','__BLOCKED_CATS__','__BLOCKED_MESSAGING__','__PREFERRED_ITEMS__','__PREFERRED_MESSAGING__'];
+        const BULK_TOKENS = ['__RESTRICTED_CATS__','__BLOCKED_CATS__','__BLOCKED_MESSAGING__','__PREFERRED_ITEMS__','__PREFERRED_MESSAGING__','__REQ_RESTRICTED_CATS__','__REQ_BLOCKED_CATS__'];
         for (const [token, value] of tokenMap) {
           if (BULK_TOKENS.includes(token)) continue;
           const regex = new RegExp(escapeRegex(token), 'g');
@@ -1138,6 +1174,26 @@
         }
         if (isSlide33 && tokenMap.has('__PREFERRED_MESSAGING__')) {
           const msg = tokenMap.get('__PREFERRED_MESSAGING__'); xml = xml.replace(/Messaging Used:/g, escapeXml(`Messaging Used: ${msg}`)); fileSubstitutions.push({ token:'Messaging Used:', replacedWith:`Messaging Used: ${msg}`, occurrences:1 });
+        }
+
+        // Req Guided Buying slide-specific bulk replacements (slides 46 = Restricted, 47 = Blocked)
+        const isReqSlide46 = filePath.includes('slide46'), isReqSlide47 = filePath.includes('slide47');
+        if (isReqSlide46 && tokenMap.has('__REQ_RESTRICTED_CATS__')) {
+          try {
+            const cats = JSON.parse(tokenMap.get('__REQ_RESTRICTED_CATS__'));
+            // Replace Name/UNSPSC placeholders sequentially (same pattern as Admin slide 31)
+            let idx = 0;
+            xml = xml.replace(/Name\/UNSPSC/g, () => escapeXml(cats[idx++] || ''));
+            if (cats.length) fileSubstitutions.push({ token:'Name/UNSPSC (Req Restricted)', replacedWith: cats.join(', '), occurrences: Math.min(3, cats.length) });
+          } catch(e) {}
+        }
+        if (isReqSlide47 && tokenMap.has('__REQ_BLOCKED_CATS__')) {
+          try {
+            const cats = JSON.parse(tokenMap.get('__REQ_BLOCKED_CATS__'));
+            let idx = 0;
+            xml = xml.replace(/Name\/UNSPSC/g, () => escapeXml(cats[idx++] || ''));
+            if (cats.length) fileSubstitutions.push({ token:'Name/UNSPSC (Req Blocked)', replacedWith: cats.join(', '), occurrences: Math.min(3, cats.length) });
+          } catch(e) {}
         }
 
         // Orphaned separator cleanup
@@ -1261,8 +1317,61 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
       if (s.categoriesInScope) { map.set('{{CATEGORY}}', s.categoriesInScope); }
       const eproName = s.eproSystem === 'Custom' ? (s.eproSystemCustomName || 'Custom ePro') : (s.eproSystem || '');
       const idpName = s.identityProvider || '';
-      if (s.ingressPunchout && eproName) { map.set('{{EPRO}}', eproName); map.set('{{EPRO / SSO}}', s.punchoutSso ? `${eproName} + SSO` : eproName); }
-      if (s.ingressDirectAccess && s.directAccessSso && idpName) { map.set('{{IDP}}', idpName); }
+      if (s.ingressPunchout && eproName) {
+        map.set('{{EPRO}}', eproName);
+        // Cover all spacing variants of the EPRO/SSO compound token
+        const eproSsoValue = s.punchoutSso ? `${eproName} + SSO` : eproName;
+        map.set('{{EPRO / SSO}}', eproSsoValue);
+        map.set('{{EPRO/ SSO}}', eproSsoValue);
+        map.set('{{EPRO /SSO}}', eproSsoValue);
+        map.set('{{EPRO/SSO}}', eproSsoValue);
+        map.set('{{ EPRO / SSO }}', eproSsoValue);
+        map.set('{{ EPRO/SSO }}', eproSsoValue);
+      } else {
+        // Punchout not selected or no ePro name — strip all EPRO token variants
+        map.set('{{EPRO / SSO}}', '');
+        map.set('{{EPRO/ SSO}}', '');
+        map.set('{{EPRO /SSO}}', '');
+        map.set('{{EPRO/SSO}}', '');
+        map.set('{{ EPRO / SSO }}', '');
+        map.set('{{ EPRO/SSO }}', '');
+        map.set('{{EPRO}}', '');
+        map.set('{{ EPRO }}', '');
+      }
+      // IDP: set when DA+SSO is on; always clear the token otherwise so it doesn't leak into slides
+      if (s.ingressDirectAccess && s.directAccessSso && idpName) {
+        map.set('{{IDP}}', idpName);
+        map.set('{{ IDP }}', idpName);
+      } else {
+        // No SSO / no IDP — strip any remaining IDP tokens and surrounding separators
+        map.set(' / {{IDP}}', '');
+        map.set('/{{IDP}}', '');
+        map.set('{{IDP}} ', '');
+        map.set(' {{IDP}}', '');
+        map.set('{{ IDP }}', '');
+        map.set('{{IDP}}', '');
+      }
+
+      // Resolve {{SSO}} placeholder based on whether SSO is actually enabled.
+      // Without this, the token is left literally in slide text when SSO is off.
+      const ssoActive = (s.ingressDirectAccess && s.directAccessSso) || (s.ingressPunchout && s.punchoutSso);
+      if (ssoActive) {
+        // Replace {{SSO}} with "with SSO" and trim surrounding punctuation variants
+        map.set(' {{SSO}}', ' with SSO');
+        map.set('{{SSO}} ', 'with SSO ');
+        map.set('{{SSO}}', 'with SSO');
+        map.set(' / {{SSO}}', ' with SSO');
+        map.set('/{{SSO}}', 'with SSO');
+      } else {
+        // SSO is off — strip the token and any surrounding separator punctuation
+        map.set(' {{SSO}}:', ':');       // "via Coupa {{SSO}}:"  → "via Coupa:"
+        map.set(' {{SSO}}.', '.');       // trailing period variant
+        map.set(' / {{SSO}}', '');       // "Coupa / {{SSO}}"    → "Coupa"
+        map.set('/{{SSO}}', '');
+        map.set(' {{SSO}}', '');         // space before token
+        map.set('{{SSO}} ', '');         // space after token
+        map.set('{{SSO}}', '');          // bare token with no surroundings
+      }
       map.set('[For Punchout] ', ''); map.set('[For Punchout]', '');
       map.set('[For SSO] ', ''); map.set('[For SSO]', '');
       map.set('without consolidation policy', ''); map.set('with consolidation policy', '');
@@ -1279,8 +1388,27 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
       }
       if (s.features.approvals && s.features.approvalsScope) map.set('{{Approvals: Some / All orders}}', s.features.approvalsScope);
       else map.set('{{Approvals: Some / All orders}}', '');
-      map.set('{{Types of Restricted Items 1}}', ''); map.set('{{Types of Restricted Items 2}}', '');
-      map.set('{{Types of Blocked Items 1}}', ''); map.set('{{Types of Blocked Items 2}}', '');
+      // Populate restricted/blocked item tokens for Req slide 46 using the same
+      // categories entered for Admin slide 31. Fall back to empty if not provided.
+      if (s.features.gbRestricted && s.features.gbRestrictedCategories) {
+        const restrictedCats = s.features.gbRestrictedCategories.split('\n').map(c => c.trim()).filter(c => c.length > 0);
+        map.set('{{Types of Restricted Items 1}}', restrictedCats[0] || '');
+        map.set('{{Types of Restricted Items 2}}', restrictedCats[1] || '');
+        // Also register as bulk token so slide 46 can be processed like slide 31
+        map.set('__REQ_RESTRICTED_CATS__', JSON.stringify(restrictedCats));
+      } else {
+        map.set('{{Types of Restricted Items 1}}', '');
+        map.set('{{Types of Restricted Items 2}}', '');
+      }
+      if (s.features.gbBlocked && s.features.gbBlockedCategories) {
+        const blockedCats = s.features.gbBlockedCategories.split('\n').map(c => c.trim()).filter(c => c.length > 0);
+        map.set('{{Types of Blocked Items 1}}', blockedCats[0] || '');
+        map.set('{{Types of Blocked Items 2}}', blockedCats[1] || '');
+        map.set('__REQ_BLOCKED_CATS__', JSON.stringify(blockedCats));
+      } else {
+        map.set('{{Types of Blocked Items 1}}', '');
+        map.set('{{Types of Blocked Items 2}}', '');
+      }
       map.set('{{ePro Image}}', '');
       if (s.features.blanketPOs) {
         const nb = s.features.bpoNumBudgets||'XX', ng = s.features.bpoNumGroups||'XX', pb = s.features.bpoPerBudget||'$$', pu = s.features.bpoPerUser||'$$';
@@ -1291,6 +1419,11 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
         map.set('Budget good from XX/XX/XXXX to XX/XX/XXXX', `Budget good from ${fmtDate(s.features.bpoBudgetPeriodStart)} to ${fmtDate(s.features.bpoBudgetPeriodEnd)}`);
       }
       if (s.customerResourceLinks) map.set('{{CUSTOMER_RESOURCES}}', s.customerResourceLinks);
+      // Strip the inline authoring annotation from the tax exemption bullet.
+      // When tax exemptions is off the whole paragraph is removed by removeParagraphsContaining.
+      // When tax exemptions is on this cleans up the red annotation so it doesn't appear in the output.
+      map.set(' (Remove if no tax exemption)', '');
+      map.set('(Remove if no tax exemption)', '');
       return map;
     }
     return { buildTokenMap };
@@ -1375,7 +1508,7 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
         const slideManifest = await PptxManipulator.removeSlides(zip, removalSet, REQ_SLIDE_FILTER_RULES);
 
         // Mark manual task slides
-        const REQ_MANUAL = new Set([33,45,46,47,82,83]);
+        const REQ_MANUAL = new Set([33,45,82,83]);
         for (const rec of slideManifest) { if (!rec.removed && REQ_MANUAL.has(rec.originalNumber)) rec.isManualTask = true; }
 
         const tokenMap = ReqPlaceholderEngine.buildTokenMap(formState);
@@ -1774,10 +1907,11 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
       if (adminPrefItems) adminPrefItems.classList.toggle('deck-filtered', !adminChecked);
       const adminPrefMsg = document.getElementById('admin-preferred-messaging')?.closest('.field-group');
       if (adminPrefMsg) adminPrefMsg.classList.toggle('deck-filtered', !adminChecked);
-      // Restricted/blocked sub-fields (Admin-only)
+      // Restricted/blocked sub-fields — visible when Admin is checked OR when Req is checked
+      // (Restricted/Blocked categories apply to both Req Slide 46/47 and Admin Slide 31/32)
       ['restricted-categories','restricted-messaging','blocked-categories','blocked-messaging'].forEach(id => {
         const el = document.getElementById(id)?.closest('.field-group');
-        if (el) el.classList.toggle('deck-filtered', !adminChecked);
+        if (el) el.classList.toggle('deck-filtered', !adminChecked && !reqChecked);
       });
     }
 
