@@ -738,8 +738,44 @@
       <!-- Form Actions -->
       <div class="form-actions">
         <button type="button" class="btn btn-ghost" id="clear-form-btn" aria-label="Clear all form data">🗑 Clear Form</button>
-        <button type="button" class="btn btn-primary" id="generate-btn" aria-label="Generate training deck(s)">⚡ Generate Deck(s)</button>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn btn-secondary" id="launch-comms-btn" onclick="openCommHub()" aria-label="Generate launch communications">📣 Generate Launch Comms</button>
+          <button type="button" class="btn btn-primary" id="generate-btn" aria-label="Generate training deck(s)">⚡ Generate Deck(s)</button>
+        </div>
       </div>
+
+      <!-- Section 7: Launch Communications -->
+      <section class="form-section" aria-labelledby="s7-heading" style="margin-top:16px;border-left:4px solid #ff9900;">
+        <div class="form-section__header" style="background:#7D6608;" id="s7-heading">📣 Launch Communications <span class="section-deck-badge" style="background:#FFF8E7;color:#7D6608;">Optional</span></div>
+        <div class="form-section__body">
+          <p class="field-hint">Generate a branded communication plan and ready-to-send email templates for this customer's Amazon Business launch. Customer details from Section 3 will be pre-populated automatically.</p>
+          <div style="background:#FFFBF0;border:1px solid #F0A500;border-radius:4px;padding:12px 16px;margin-bottom:8px;font-size:.85rem;">
+            <strong>What you'll get:</strong> Pre-Launch email, Training invitation, Quick Start Guide, Go-Live announcement, Launch poster, Intranet banner, and 30-day adoption follow-up — all branded with the customer name and categories.
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div class="field-group" style="flex:1;min-width:200px;margin:0;">
+              <label for="comm-go-live">Go-Live Date for Communications</label>
+              <input type="date" id="comm-go-live" name="commGoLive" />
+              <span class="field-hint">Leave blank to use the same go-live date as the training deck (if set).</span>
+            </div>
+            <div class="field-group" style="min-width:200px;margin:0;">
+              <label for="comm-tone">Communication Tone</label>
+              <select id="comm-tone" name="commTone">
+                <option value="balanced">General Awareness (recommended)</option>
+                <option value="formal">Formal &amp; Policy-Focused</option>
+                <option value="casual">Casual &amp; Engaging</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <button type="button" class="btn btn-primary" onclick="openCommHub()" style="background:#ff9900;color:#232f3e;">
+              📣 Open Communication Planning Hub →
+            </button>
+            <span style="font-size:.8rem;color:#565959;margin-left:12px;">Opens in a new tab with customer details pre-populated.</span>
+          </div>
+        </div>
+      </section>
+
     </form>
 
     <!-- Error Banner -->
@@ -769,6 +805,49 @@
 
   <script>
   'use strict';
+
+  // ── Launch Communications integration ─────────────────────────────
+  function openCommHub() {
+    // Gather customer details from the training hub form
+    const company = (document.getElementById('customer-name')?.value || '').trim();
+    const categoriesRaw = (document.getElementById('categories-in-scope')?.value || '').trim();
+    const tone = document.getElementById('comm-tone')?.value || 'balanced';
+
+    // Go-live date: use comm-specific date if set, otherwise fall back to training deck dates
+    let goLive = document.getElementById('comm-go-live')?.value || '';
+
+    // Normalise categories from free-text to the comm hub's known values
+    // The training deck uses free-text like "Office Supplies, IT Equipment"
+    // The comm hub uses checkboxes: Office, Breakroom, IT, MRO, Tail Spend
+    const catLower = categoriesRaw.toLowerCase();
+    const mappedCats = [];
+    if (catLower.includes('office')) mappedCats.push('Office');
+    if (catLower.includes('breakroom') || catLower.includes('break room')) mappedCats.push('Breakroom');
+    if (catLower.includes('it') || catLower.includes('tech') || catLower.includes('computer')) mappedCats.push('IT');
+    if (catLower.includes('mro') || catLower.includes('maintenance') || catLower.includes('repair')) mappedCats.push('MRO');
+    if (catLower.includes('tail') || catLower.includes('indirect')) mappedCats.push('Tail Spend');
+    // If no match, pass the raw value as-is so comm hub can display it
+    const categories = mappedCats.length > 0 ? mappedCats.join(',') : categoriesRaw;
+
+    // Get eProcurement system from the punchout section if filled
+    const epro = document.getElementById('epro-system')?.value || '';
+    const eproCustom = document.getElementById('epro-custom-name')?.value || '';
+    const procurement = eproCustom || (epro !== '' ? epro : '');
+
+    // Build the URL params
+    const params = new URLSearchParams();
+    if (company) params.set('company', company);
+    if (categories) params.set('categories', categories);
+    if (goLive) params.set('goLive', goLive);
+    if (procurement) params.set('procurement', procurement);
+    if (tone) params.set('tone', tone);
+    // Auto-generate if we have enough data
+    if (company && categories) params.set('autoGenerate', 'true');
+
+    const commHubUrl = 'comm-hub.html?' + params.toString();
+    window.open(commHubUrl, '_blank');
+  }
+
 
   const STORAGE_KEY = 'combined-deck-hub-state';
 
