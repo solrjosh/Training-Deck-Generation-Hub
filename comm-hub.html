@@ -287,9 +287,12 @@ input:focus,select:focus{outline:none;border-color:var(--ab-orange);box-shadow:0
 
 <!-- ASSETS -->
 <div class="page-section" id="section-assets"><div class="container">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
     <h2 style="color:var(--ab-navy);font-size:1.2rem">&#128196; Communication Assets</h2>
-    <button class="btn btn-secondary" style="font-size:.8rem;padding:.5rem 1rem" onclick="showSection('setup',document.querySelector('.nav-tab'))">&#10003; Edit Setup</button>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary" style="font-size:.8rem;padding:.5rem 1rem" onclick="downloadAllWord()">&#128196; Download All (Word)</button>
+      <button class="btn btn-secondary" style="font-size:.8rem;padding:.5rem 1rem" onclick="showSection('setup',document.querySelector('.nav-tab'))">&#10003; Edit Setup</button>
+    </div>
   </div>
   <div class="filter-bar" id="filter-bar">
     <button class="filter-pill active" onclick="setFilter('all',this)">All</button>
@@ -816,6 +819,66 @@ function toggleDownloadMenu(id) {
       }
     });
   }, 10);
+}
+
+function downloadAllWord() {
+  if (generatedAssets.length === 0) {
+    alert('No templates generated yet. Please complete the Setup and click Generate Communication Plan first.');
+    return;
+  }
+
+  const company = document.getElementById('company-name')?.value.trim() || 'Customer';
+  const sharedStyles = `
+    body{font-family:Arial,sans-serif;max-width:750px;margin:2rem auto;line-height:1.7;color:#232f3e}
+    ul,ol{margin:.5rem 0}li{margin-bottom:.4rem}
+    h1{font-size:1.6rem;color:#232f3e;margin-bottom:.2rem}
+    h2{font-size:1.1rem;margin:.3rem 0 0;color:#fff}
+    .doc-banner{background:#232f3e;padding:1.4rem 1.8rem;color:#fff;border-radius:4px 4px 0 0;margin-top:2rem}
+    .doc-banner .cust-name{color:#FF6200;font-size:1.4rem;font-weight:700}
+    .doc-banner .ab-mark{font-size:.6rem;letter-spacing:2px;opacity:.7;text-transform:uppercase;display:block}
+    .doc-banner .sub{font-size:.8rem;opacity:.8;margin-top:.2rem;display:block}
+    .doc-content{padding:1.5rem 2rem;border:1px solid #e3e6e8;border-top:none;margin-bottom:2rem}
+    .sec-head{color:#FF6200;font-weight:700;font-size:.95rem;display:block;margin:1.2rem 0 .3rem}
+    .warn-box{background:#fff3ec;border-left:4px solid #FF6200;padding:.7rem 1rem;margin:1rem 0;border-radius:0 8px 8px 0}
+    .legal-box{background:#fffbe6;border-left:4px solid #f0a500;padding:.7rem 1rem;margin:1rem 0;border-radius:0 8px 8px 0}
+    .action-badge{background:#cc0c39;color:#fff;padding:.2rem .5rem;border-radius:4px;font-size:.72rem;font-weight:700}
+    .signoff{margin-top:1.2rem;padding-top:.8rem;border-top:1px solid #e3e6e8;font-size:.85rem}
+    .template-header{background:#f5f7fa;border:1px solid #e3e6e8;padding:.6rem 1rem;margin-top:2.5rem;font-size:.75rem;color:#6c757d;border-bottom:none}
+    .template-header strong{color:#232f3e;font-size:.88rem}
+    .subject-line{background:#eef4ff;border:1px solid #c5d8f7;padding:.5rem 1rem;font-size:.82rem;color:#232f3e;border-top:none;border-bottom:none}
+    .page-break{page-break-after:always;border:none;height:0;margin:1rem 0}
+    a{color:#FF6200}
+    @media print{.page-break{page-break-after:always}}
+  `;
+
+  // Build combined HTML — one template per section with a page break between
+  let combinedBody = `<h1>&#128196; Launch Communications &mdash; ${company}</h1>
+  <p style="color:#6c757d;font-size:.88rem;margin-bottom:2rem">Generated ${new Date().toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'})} &nbsp;&bull;&nbsp; ${generatedAssets.length} template${generatedAssets.length !== 1 ? 's' : ''}</p>`;
+
+  generatedAssets.forEach((asset, idx) => {
+    const body = document.getElementById('body-' + asset.id);
+    if (!body) return;
+    const isLast = idx === generatedAssets.length - 1;
+
+    combinedBody += `
+    <div class="template-header">
+      <strong>${asset.title}</strong>
+      &nbsp;&bull;&nbsp; ${asset.phase} &nbsp;&bull;&nbsp; ${asset.role}
+    </div>
+    <div class="subject-line"><strong>Subject:</strong> ${asset.subject}</div>
+    ${body.innerHTML}
+    ${!isLast ? '<hr class="page-break">' : ''}`;
+  });
+
+  const fullHtml = `<html><head><meta charset="utf-8"><title>Launch Communications &mdash; ${company}</title><style>${sharedStyles}</style></head><body>${combinedBody}</body></html>`;
+
+  const blob = new Blob([fullHtml], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = company.replace(/[^a-zA-Z0-9]/g, '_') + '_Launch_Communications.doc';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // //// Generate //////////////////////////////////////////////////////////////////////////////////////////////////////////
