@@ -3,456 +3,783 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Amazon Business – Communication Planning Hub</title>
+<title>Amazon Business – Launch Communication Hub</title>
 <style>
-:root{--ab-navy:#232f3e;--ab-dark:#1a242f;--ab-orange:#ff9900;--ab-orange-hover:#ec7211;--ab-teal:#00a4b4;--ab-light:#f5f7fa;--ab-border:#e3e6e8;--ab-text:#232f3e;--ab-muted:#6c757d;--ab-white:#fff;--ab-success:#067d62;--ab-purple:#6f42c1;--ab-gradient:linear-gradient(135deg,#232f3e 0%,#37475a 100%);--shadow:0 4px 20px rgba(35,47,62,.1);--shadow-lg:0 8px 32px rgba(35,47,62,.15)}
+:root{
+  --ab-navy:#232f3e;--ab-orange:#FF6200;--ab-orange-hover:#CC4E00;
+  --ab-teal:#00a4b4;--ab-light:#f5f7fa;--ab-border:#e3e6e8;
+  --ab-text:#232f3e;--ab-muted:#6c757d;--ab-white:#fff;
+  --ab-success:#067d62;--ab-purple:#6f42c1;
+  --ab-gradient:linear-gradient(135deg,#232f3e 0%,#37475a 100%);
+  --shadow:0 4px 20px rgba(35,47,62,.1);
+}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Amazon Ember',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--ab-light);color:var(--ab-text);line-height:1.6}
-.header{background:var(--ab-gradient);color:var(--ab-white);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.header-left{display:flex;align-items:center;gap:1rem}
+.header{background:var(--ab-gradient);color:#fff;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .header h1{font-size:1rem;font-weight:400;opacity:.9}
-.header-logo{max-height:32px;display:none;border-radius:4px}
-.header-logo.visible{display:block}
-.nav-tabs{background:var(--ab-white);border-bottom:2px solid var(--ab-border);padding:0 2rem;display:flex;gap:0}
+.header-logo{max-height:32px;display:none;border-radius:4px}.header-logo.visible{display:block}
+.nav-tabs{background:#fff;border-bottom:2px solid var(--ab-border);padding:0 2rem;display:flex;gap:0}
 .nav-tab{padding:.8rem 1.5rem;font-size:.85rem;font-weight:600;color:var(--ab-muted);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
-.nav-tab:hover{color:var(--ab-orange)}
-.nav-tab.active{color:var(--ab-orange);border-bottom-color:var(--ab-orange)}
+.nav-tab:hover{color:var(--ab-orange)}.nav-tab.active{color:var(--ab-orange);border-bottom-color:var(--ab-orange)}
 .page-section{display:none;padding:2rem}.page-section.active{display:block}
 .container{max-width:960px;margin:0 auto}
-.card{background:var(--ab-white);border-radius:12px;box-shadow:var(--shadow);padding:2rem;margin-bottom:1.5rem;border:1px solid var(--ab-border)}
-.card h2{font-size:1.3rem;margin-bottom:.2rem;color:var(--ab-navy);display:flex;align-items:center;gap:.5rem}
+.card{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:2rem;margin-bottom:1.5rem;border:1px solid var(--ab-border)}
+.card h2{font-size:1.2rem;margin-bottom:.2rem;color:var(--ab-navy);display:flex;align-items:center;gap:.5rem}
 .card .subtitle{color:var(--ab-muted);margin-bottom:1.5rem;font-size:.88rem}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
 .form-group{margin-bottom:1rem}
 .form-group label{display:block;font-weight:600;margin-bottom:.3rem;font-size:.85rem;color:var(--ab-navy)}
 .form-group .hint{font-size:.75rem;color:var(--ab-muted);margin-bottom:.3rem}
-input[type="text"],input[type="email"],input[type="date"],select{width:100%;padding:.65rem .9rem;border:1.5px solid var(--ab-border);border-radius:8px;font-size:.9rem;font-family:inherit;transition:border-color .2s,box-shadow .2s}
-input:focus,select:focus{outline:none;border-color:var(--ab-orange);box-shadow:0 0 0 3px rgba(255,153,0,.12)}
-.logo-upload{border:2px dashed var(--ab-border);border-radius:10px;padding:1.2rem;text-align:center;cursor:pointer;position:relative;transition:all .2s;background:var(--ab-light)}
-.logo-upload:hover{border-color:var(--ab-orange);background:rgba(255,153,0,.03)}
-.logo-upload.has-file{border-color:var(--ab-success);background:rgba(6,125,98,.03)}
-.logo-upload input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
-.logo-upload .upload-icon{font-size:1.5rem;margin-bottom:.3rem}
-.logo-upload p{font-size:.82rem;color:var(--ab-muted)}
-.logo-upload img{max-width:150px;max-height:60px;margin-top:.5rem;display:none}
-.logo-upload img.visible{display:block}
-.tone-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-top:.4rem}
-.tone-card{border:2px solid var(--ab-border);border-radius:10px;padding:1rem;cursor:pointer;text-align:center;transition:all .2s;background:var(--ab-white)}
-.tone-card:hover{border-color:var(--ab-orange);transform:translateY(-1px)}
-.tone-card.selected{border-color:var(--ab-orange);background:rgba(255,153,0,.04);box-shadow:0 0 0 3px rgba(255,153,0,.1)}
-.tone-card h4{font-size:.82rem;color:var(--ab-navy);margin-bottom:.2rem}
-.tone-card p{font-size:.7rem;color:var(--ab-muted);line-height:1.3}
-.tone-card .tone-icon{font-size:1.5rem;margin-bottom:.4rem}
+input[type="text"],input[type="email"],input[type="date"],select{width:100%;padding:.65rem .9rem;border:1.5px solid var(--ab-border);border-radius:8px;font-size:.9rem;font-family:inherit;transition:border-color .2s}
+input:focus,select:focus{outline:none;border-color:var(--ab-orange);box-shadow:0 0 0 3px rgba(255,98,0,.12)}
+.ingress-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-top:.4rem}
+.ingress-card{border:2px solid var(--ab-border);border-radius:10px;padding:1rem;cursor:pointer;transition:all .2s;background:#fff}
+.ingress-card:hover{border-color:var(--ab-orange);transform:translateY(-1px)}
+.ingress-card.selected{border-color:var(--ab-orange);background:rgba(255,98,0,.04);box-shadow:0 0 0 3px rgba(255,98,0,.1)}
+.ingress-card h4{font-size:.85rem;color:var(--ab-navy);margin-bottom:.2rem}
+.ingress-card p{font-size:.72rem;color:var(--ab-muted);line-height:1.3}
+.ingress-card .ic-icon{font-size:1.4rem;margin-bottom:.4rem}
+.check-group{display:flex;flex-direction:column;gap:.6rem;margin-top:.4rem}
+.check-item{display:flex;align-items:flex-start;gap:.6rem;font-size:.85rem;cursor:pointer}
+.check-item input[type="checkbox"]{width:16px;height:16px;accent-color:var(--ab-orange);flex-shrink:0;margin-top:.15rem;cursor:pointer}
 .btn{padding:.7rem 2rem;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem}
-.btn-primary{background:var(--ab-orange);color:var(--ab-white);box-shadow:0 2px 8px rgba(255,153,0,.3)}
+.btn-primary{background:var(--ab-orange);color:#fff;box-shadow:0 2px 8px rgba(255,98,0,.3)}
 .btn-primary:hover{background:var(--ab-orange-hover);transform:translateY(-1px)}
-.btn-secondary{background:var(--ab-navy);color:var(--ab-white)}
-.btn-secondary:hover{background:#37475a}
+.btn-secondary{background:var(--ab-navy);color:#fff}.btn-secondary:hover{background:#37475a}
 .btn-row{display:flex;justify-content:flex-end;margin-top:1.5rem;gap:.8rem}
-.timeline-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:.5rem}
-.timeline-date-edit{display:flex;align-items:center;gap:.5rem}
-.timeline-date-edit label{font-size:.82rem;font-weight:600;color:var(--ab-navy)}
-.timeline-date-edit input{padding:.4rem .6rem;border:1.5px solid var(--ab-border);border-radius:6px;font-size:.82rem}
+</style>
+/* Timeline */
+.tl-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:.5rem}
+.tl-header input[type="date"]{padding:.4rem .6rem;border:1.5px solid var(--ab-border);border-radius:6px;font-size:.82rem}
 .timeline{position:relative;padding:1rem 0}
 .timeline::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--ab-orange),var(--ab-teal),var(--ab-success));border-radius:3px}
-.timeline-item{display:flex;gap:1rem;margin-bottom:1.5rem;position:relative}
-.timeline-dot{width:12px;height:12px;border-radius:50%;background:var(--ab-orange);border:3px solid var(--ab-white);box-shadow:0 0 0 3px var(--ab-orange);margin-top:.4rem;flex-shrink:0;position:relative;left:19px;z-index:1}
-.timeline-dot.teal{background:var(--ab-teal);box-shadow:0 0 0 3px var(--ab-teal)}
-.timeline-dot.green{background:var(--ab-success);box-shadow:0 0 0 3px var(--ab-success)}
-.timeline-content{background:var(--ab-white);border:1px solid var(--ab-border);border-radius:10px;padding:1rem 1.2rem;flex:1;margin-left:1rem;box-shadow:var(--shadow)}
-.timeline-content h4{font-size:.88rem;color:var(--ab-navy);margin-bottom:.2rem}
-.timeline-content .tl-date{font-size:.72rem;color:var(--ab-orange);font-weight:600;margin-bottom:.3rem}
-.timeline-content p{font-size:.8rem;color:var(--ab-muted);line-height:1.4}
-.timeline-content .tl-assets{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.4rem}
-.timeline-content .tl-tag{background:rgba(255,153,0,.1);color:var(--ab-orange-hover);padding:.15rem .5rem;border-radius:12px;font-size:.65rem;font-weight:600}
+.tl-item{display:flex;gap:1rem;margin-bottom:1.5rem;position:relative}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--ab-orange);border:3px solid #fff;box-shadow:0 0 0 3px var(--ab-orange);margin-top:.4rem;flex-shrink:0;position:relative;left:19px;z-index:1}
+.tl-dot.teal{background:var(--ab-teal);box-shadow:0 0 0 3px var(--ab-teal)}
+.tl-dot.green{background:var(--ab-success);box-shadow:0 0 0 3px var(--ab-success)}
+.tl-content{background:#fff;border:1px solid var(--ab-border);border-radius:10px;padding:1rem 1.2rem;flex:1;margin-left:1rem;box-shadow:var(--shadow)}
+.tl-content h4{font-size:.88rem;color:var(--ab-navy);margin-bottom:.2rem}
+.tl-date{font-size:.72rem;color:var(--ab-orange);font-weight:600;margin-bottom:.3rem}
+.tl-content p{font-size:.8rem;color:var(--ab-muted);line-height:1.4}
+.tl-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.4rem}
+.tl-tag{background:rgba(255,98,0,.1);color:var(--ab-orange-hover);padding:.15rem .5rem;border-radius:12px;font-size:.65rem;font-weight:600}
+/* Stats */
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
-.stat-card{background:var(--ab-white);border-radius:10px;padding:1rem;text-align:center;border:1px solid var(--ab-border);box-shadow:var(--shadow)}
-.stat-card .stat-icon{font-size:1.5rem;margin-bottom:.3rem}
-.stat-card .stat-num{font-size:1.4rem;font-weight:700;color:var(--ab-navy)}
-.stat-card .stat-label{font-size:.7rem;color:var(--ab-muted);text-transform:uppercase;letter-spacing:.5px}
-.setup-hero{background:var(--ab-gradient);border-radius:14px;padding:2rem 2.5rem;margin-bottom:1.5rem;color:var(--ab-white);position:relative;overflow:hidden}
-.setup-hero::after{content:'';position:absolute;right:-30px;top:-30px;width:200px;height:200px;background:rgba(255,153,0,.08);border-radius:50%}
-.setup-hero h2{font-size:1.5rem;margin-bottom:.4rem;position:relative;z-index:1}
-.setup-hero p{opacity:.85;font-size:.9rem;max-width:500px;position:relative;z-index:1}
-.catalog-nav{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
-.filter-pill{padding:.5rem 1.2rem;border:1.5px solid var(--ab-border);border-radius:20px;background:var(--ab-white);cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s}
-.filter-pill:hover,.filter-pill.active{border-color:var(--ab-orange);background:rgba(255,153,0,.06);color:var(--ab-orange-hover)}
-.doc-card{background:var(--ab-white);border-radius:12px;box-shadow:var(--shadow);margin-bottom:1.5rem;overflow:hidden;border:1px solid var(--ab-border)}
-.doc-card-bar{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;background:var(--ab-light);border-bottom:1px solid var(--ab-border)}
-.doc-card-bar h3{font-size:.85rem;color:var(--ab-navy)}
-.doc-card-bar .pill{background:var(--ab-navy);color:var(--ab-white);padding:.15rem .5rem;border-radius:10px;font-size:.65rem;margin-right:.4rem}
-.doc-card-bar .fmt{background:var(--ab-success);color:var(--ab-white);padding:.15rem .45rem;border-radius:10px;font-size:.62rem;margin-right:.3rem}
-.doc-card-bar button{padding:.35rem .8rem;border:none;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;margin-left:.3rem;transition:all .15s}
-.btn-edit-d{background:rgba(255,153,0,.12);color:var(--ab-orange-hover)}.btn-edit-d:hover{background:rgba(255,153,0,.2)}
-.btn-dl-d{background:var(--ab-navy);color:var(--ab-white)}.btn-dl-d:hover{background:#37475a}
+.stat-card{background:#fff;border-radius:10px;padding:1rem;text-align:center;border:1px solid var(--ab-border);box-shadow:var(--shadow)}
+.stat-num{font-size:1.4rem;font-weight:700;color:var(--ab-navy)}
+.stat-label{font-size:.7rem;color:var(--ab-muted);text-transform:uppercase;letter-spacing:.5px}
+/* Assets */
+.filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+.filter-pill{padding:.5rem 1.2rem;border:1.5px solid var(--ab-border);border-radius:20px;background:#fff;cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s}
+.filter-pill:hover,.filter-pill.active{border-color:var(--ab-orange);background:rgba(255,98,0,.06);color:var(--ab-orange-hover)}
+.doc-card{background:#fff;border-radius:12px;box-shadow:var(--shadow);margin-bottom:1.5rem;overflow:hidden;border:1px solid var(--ab-border)}
+.doc-bar{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;background:var(--ab-light);border-bottom:1px solid var(--ab-border)}
+.doc-bar h3{font-size:.85rem;color:var(--ab-navy)}
+.doc-bar .pill-phase{background:var(--ab-navy);color:#fff;padding:.15rem .5rem;border-radius:10px;font-size:.65rem;margin-right:.4rem}
+.doc-bar .pill-type{background:var(--ab-success);color:#fff;padding:.15rem .45rem;border-radius:10px;font-size:.62rem;margin-right:.3rem}
+.doc-bar .pill-role{background:#6f42c1;color:#fff;padding:.15rem .45rem;border-radius:10px;font-size:.62rem;margin-right:.3rem}
+.doc-bar button{padding:.35rem .8rem;border:none;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;margin-left:.3rem}
+.btn-edit-d{background:rgba(255,98,0,.12);color:var(--ab-orange-hover)}.btn-edit-d:hover{background:rgba(255,98,0,.2)}
+.btn-dl-d{background:var(--ab-navy);color:#fff}.btn-dl-d:hover{background:#37475a}
 .doc-body{padding:0;font-size:.88rem;line-height:1.8;max-height:500px;overflow-y:auto}
-.doc-banner{background:var(--ab-gradient);padding:1.4rem 1.8rem;color:var(--ab-white)}
+/* Email template content styles */
+.doc-banner{background:var(--ab-gradient);padding:1.4rem 1.8rem;color:#fff}
 .doc-banner .ab-mark{font-size:.6rem;letter-spacing:2px;opacity:.7;text-transform:uppercase}
-.doc-banner h2{font-size:1.1rem;margin:.3rem 0 0;color:var(--ab-white)}
+.doc-banner h2{font-size:1.1rem;margin:.3rem 0 0;color:#fff}
 .doc-banner .cust-name{color:var(--ab-orange);font-size:1.4rem;font-weight:700}
 .doc-banner .sub{font-size:.8rem;opacity:.8;margin-top:.2rem}
 .doc-content{padding:1.5rem 2rem}
 .doc-content .sec-head{color:var(--ab-orange);font-weight:700;font-size:.95rem;margin:1.2rem 0 .3rem;display:block}
 .doc-content ul,.doc-content ol{padding-left:1.3rem;margin:.4rem 0}
 .doc-content li{margin-bottom:.4rem}
-.doc-content .badge-row{display:flex;gap:.5rem;align-items:center;margin:.6rem 0}
-.doc-content .badge-pill{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .6rem;border-radius:6px;font-size:.72rem;font-weight:700}
-.doc-content .badge-purple{background:var(--ab-purple);color:#fff}
-.doc-content .badge-green{background:var(--ab-success);color:#fff}
-.doc-content .cta-box{background:#fff8e1;border-left:4px solid var(--ab-orange);padding:.7rem 1rem;margin:1rem 0;border-radius:0 8px 8px 0;font-size:.85rem}
-.doc-content .warning-box{background:#fff3f3;border-left:4px solid #dc3545;padding:.7rem 1rem;margin:1rem 0;border-radius:0 8px 8px 0;font-size:.82rem;color:#842029}
 .doc-content p{margin:.4rem 0}
+.doc-content .warn-box{background:#fff3ec;border-left:4px solid var(--ab-orange);padding:.7rem 1rem;margin:1rem 0;border-radius:0 8px 8px 0;font-size:.85rem}
+.doc-content .legal-box{background:#fffbe6;border-left:4px solid #f0a500;padding:.7rem 1rem;margin:1rem 0;border-radius:0 8px 8px 0;font-size:.82rem;color:#7d6608}
 .doc-content .signoff{margin-top:1.2rem;padding-top:.8rem;border-top:1px solid var(--ab-border);font-size:.85rem}
+.doc-content .action-badge{background:#cc0c39;color:#fff;padding:.2rem .5rem;border-radius:4px;font-size:.72rem;font-weight:700}
 .doc-edit{display:none;padding:1rem 1.5rem;border-top:1px solid var(--ab-border);background:var(--ab-light)}
 .doc-edit.open{display:block}
 .doc-edit textarea{width:100%;min-height:200px;padding:.8rem;border:1.5px solid var(--ab-border);border-radius:8px;font-family:'Courier New',monospace;font-size:.8rem;line-height:1.5}
 .doc-edit-btns{display:flex;justify-content:flex-end;gap:.4rem;margin-top:.5rem}
 .doc-edit-btns button{padding:.4rem .9rem;border:none;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer}
-.prefill-banner{background:#e8f4fd;border:1px solid #a8d5f0;border-radius:10px;padding:.8rem 1.2rem;margin-bottom:1rem;font-size:.85rem;color:#0a5c8a;display:none}
-.prefill-banner.visible{display:flex;align-items:center;gap:.6rem}
-@media(max-width:700px){.form-row{grid-template-columns:1fr}.tone-selector{grid-template-columns:1fr}.stats-bar{grid-template-columns:1fr 1fr}}
+/* Hero */
+.setup-hero{background:var(--ab-gradient);border-radius:14px;padding:2rem 2.5rem;margin-bottom:1.5rem;color:#fff}
+.setup-hero h2{font-size:1.5rem;margin-bottom:.4rem}
+.setup-hero p{opacity:.85;font-size:.9rem;max-width:500px}
+/* Prefill banner */
+.prefill-banner{background:#e8f4fd;border:1px solid #a8d5f0;border-radius:10px;padding:.8rem 1.2rem;margin-bottom:1rem;font-size:.85rem;color:#0a5c8a;display:none;align-items:center;gap:.6rem}
+.prefill-banner.visible{display:flex}
+@media(max-width:700px){.form-row,.ingress-grid,.stats-bar{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="header">
-  <div class="header-left">
-    <h1>Communication Planning Hub</h1>
-  </div>
-  <div class="header-right"><img class="header-logo" id="header-logo" alt="Customer Logo"></div>
+  <div><h1>📣 Launch Communication Hub — Amazon Business</h1></div>
+  <img class="header-logo" id="header-logo" alt="Customer Logo">
 </div>
+
 <div class="nav-tabs">
   <button class="nav-tab active" onclick="showSection('setup',this)">⚙ Setup</button>
-  <button class="nav-tab" onclick="showSection('timeline',this)" id="tab-timeline">📅 Communication Plan</button>
-  <button class="nav-tab" onclick="showSection('catalog',this)" id="tab-catalog">📄 Assets</button>
+  <button class="nav-tab" onclick="showSection('timeline',this)" id="tab-timeline">📅 Timeline</button>
+  <button class="nav-tab" onclick="showSection('assets',this)" id="tab-assets">📄 Assets</button>
 </div>
+
 <!-- SETUP -->
 <div class="page-section active" id="section-setup"><div class="container">
-<div class="prefill-banner" id="prefill-banner">
-  <span>✅</span>
-  <span id="prefill-msg">Customer details pre-populated from the Training Deck Hub.</span>
-</div>
-<div class="setup-hero">
-  <h2>Build Your Communication Plan</h2>
-  <p>Enter customer details below to generate a branded communication timeline and ready-to-send assets modeled on Amazon Business best practices.</p>
-</div>
-<div class="card">
-  <h2><span class="card-icon">📝</span> Customer Details</h2>
-  <p class="subtitle">These details populate all generated communications and the timeline.</p>
-  <div class="form-row">
-    <div class="form-group"><label>Company Name *</label><input type="text" id="company-name" placeholder=""></div>
-    <div class="form-group"><label>Category Endorsement *</label><div class="hint">What category are they endorsing AB for?</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.4rem">
-        <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="cat-office" value="Office"> Office</label>
-        <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="cat-breakroom" value="Breakroom"> Breakroom</label>
-        <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="cat-it" value="IT"> IT</label>
-        <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="cat-mro" value="MRO"> MRO</label>
-        <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="cat-tailspend" value="Tail Spend"> Tail Spend</label>
-        <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="cat-other" value="Other" onchange="document.getElementById('cat-other-text').style.display=this.checked?'block':'none'"> Other</label>
+  <div class="prefill-banner" id="prefill-banner"><span>✅</span><span id="prefill-msg"></span></div>
+  <div class="setup-hero">
+    <h2>Build Your Launch Communication Plan</h2>
+    <p>Select the project type and ingress configuration. The hub will generate the correct email templates pre-populated with your customer details.</p>
+  </div>
+
+  <!-- Section 1: Customer Details -->
+  <div class="card">
+    <h2>📝 Customer Details</h2>
+    <p class="subtitle">Used to populate all generated communications.</p>
+    <div class="form-row">
+      <div class="form-group"><label>Company Name *</label><input type="text" id="company-name" placeholder="e.g. Acme Corporation"></div>
+      <div class="form-group"><label>Go-Live Date *</label><input type="date" id="go-live-date"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>POC Name <span style="font-weight:normal;color:var(--ab-muted)">(internal sender)</span></label><input type="text" id="contact-name" placeholder="e.g. Jane Smith, Procurement Manager"></div>
+      <div class="form-group"><label>Procurement Policies Link <span style="font-weight:normal;color:var(--ab-muted)">(optional)</span></label><input type="text" id="policy-link" placeholder="https://..."></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Categories in Scope</label><input type="text" id="categories" placeholder="e.g. Office Supplies, IT Peripherals"></div>
+      <div class="form-group">
+        <label>Business Prime</label>
+        <select id="has-prime">
+          <option value="yes">Yes — include "with Business Prime"</option>
+          <option value="no">No — omit Business Prime references</option>
+        </select>
       </div>
-      <input type="text" id="cat-other-text" placeholder="Specify other category" style="display:none;margin-top:.5rem">
     </div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Go-Live Date *</label><input type="date" id="go-live-date"></div>
-    <div class="form-group"><label>Procurement System <span style="font-weight:normal;color:var(--ab-muted)">(if any)</span></label><input type="text" id="procurement-system" placeholder="e.g. Oracle, Ariba, Coupa"></div>
+
+  <!-- Section 2: Ingress Type -->
+  <div class="card">
+    <h2>🔌 Ingress Type *</h2>
+    <p class="subtitle">Select how users will access the Amazon Business account. This determines which email templates are generated.</p>
+    <div class="ingress-grid">
+      <div class="ingress-card" onclick="selectIngress('da',this)" id="ic-da">
+        <div class="ic-icon">📧</div>
+        <h4>Direct Access</h4>
+        <p>Users receive an invitation email from business@amazon.com and register directly on Amazon Business.</p>
+      </div>
+      <div class="ingress-card" onclick="selectIngress('punchout',this)" id="ic-punchout">
+        <div class="ic-icon">🔗</div>
+        <h4>Punchout</h4>
+        <p>Users access Amazon Business through a tile or link in their eProcurement system (Coupa, Ariba, etc.).</p>
+      </div>
+      <div class="ingress-card" onclick="selectIngress('uies',this)" id="ic-uies">
+        <div class="ic-icon">🔒</div>
+        <h4>UIES + Sharable Link</h4>
+        <p>Email invitation is suppressed. Users register via a Sharable Link provided by the company. Includes required legal disclaimer.</p>
+      </div>
+      <div class="ingress-card" onclick="selectIngress('punchout-sso',this)" id="ic-punchout-sso">
+        <div class="ic-icon">🔐</div>
+        <h4>Punchout + SSO (UIES)</h4>
+        <p>Punchout access with SSO/IDP authentication. Account auto-created; users access via ePRO system.</p>
+      </div>
+    </div>
+    <!-- ePRO system field (shown for Punchout types) -->
+    <div id="epro-field" style="display:none;margin-top:1rem">
+      <div class="form-row">
+        <div class="form-group"><label>eProcurement System Name *</label><input type="text" id="epro-system" placeholder="e.g. Coupa, Ariba, Oracle iProcurement"></div>
+        <div class="form-group" id="idp-field-wrap" style="display:none"><label>IDP / SSO Provider</label><input type="text" id="idp-name" placeholder="e.g. Okta, Azure AD, Ping"></div>
+      </div>
+    </div>
+    <!-- UIES Sharable Link field -->
+    <div id="sharable-link-field" style="display:none;margin-top:1rem">
+      <div class="form-group"><label>Sharable Link URL *</label><input type="text" id="sharable-link" placeholder="https://..."></div>
+    </div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>POC Name</label><input type="text" id="contact-name" placeholder=""></div>
-    <div class="form-group"><label>POC Email</label><input type="email" id="contact-email" placeholder=""></div>
+
+  <!-- Section 3: User Scenarios -->
+  <div class="card">
+    <h2>👥 User Scenarios *</h2>
+    <p class="subtitle">Select all registration scenarios that apply to your users. Each scenario generates a tailored launch email.</p>
+    <div class="check-group">
+      <label class="check-item"><input type="checkbox" id="sc-new" checked><div><strong>New to Amazon</strong> — User has no existing Amazon account. Account auto-created; they just set a password.</div></label>
+      <label class="check-item"><input type="checkbox" id="sc-existing"><div><strong>Existing Single User Account</strong> — User has a personal or solo Amazon account with their work email. Must migrate or separate.</div></label>
+      <label class="check-item"><input type="checkbox" id="sc-multiuser"><div><strong>Admin on Multi-User Outside Account</strong> — User is an admin of an existing multi-user Amazon Business account that must be migrated or merged.</div></label>
+    </div>
   </div>
-</div>
-<div class="card">
-  <h2><span class="card-icon">🎨</span> Communication Style</h2>
-  <p class="subtitle">This shapes the tone, language, and energy of all generated content.</p>
-  <div class="tone-selector">
-    <div class="tone-card" onclick="selectTone('formal',this)"><div class="tone-icon">📜</div><h4>Formal &amp; Policy-Focused</h4><p>Professional, directive. Emphasizes compliance and mandatory process.</p></div>
-    <div class="tone-card selected" onclick="selectTone('balanced',this)"><div class="tone-icon">📣</div><h4>General Awareness</h4><p>Clear, informative, professional. Balanced tone for most organizations.</p></div>
-    <div class="tone-card" onclick="selectTone('casual',this)"><div class="tone-icon">🎉</div><h4>Casual &amp; Engaging</h4><p>Friendly, energetic, emoji-rich. Modern, informal workplace cultures.</p></div>
+
+  <!-- Section 4: Role-based emails -->
+  <div class="card">
+    <h2>📋 Additional Role-Based Emails</h2>
+    <p class="subtitle">Select if your project includes Approvers or Administrators who need separate pre-launch and launch communications (Direct Access only).</p>
+    <div class="check-group">
+      <label class="check-item"><input type="checkbox" id="incl-approver"><div><strong>Approver emails</strong> — Pre-launch, launch, and follow-up emails for designated approvers. Includes approval responsibility messaging.</div></label>
+      <label class="check-item"><input type="checkbox" id="incl-admin"><div><strong>Administrator emails</strong> — Pre-launch, launch, and follow-up emails for account administrators. Includes admin responsibility messaging.</div></label>
+      <label class="check-item"><input type="checkbox" id="incl-prelunch" checked><div><strong>Pre-Launch announcement</strong> — General awareness email sent to all users before launch date.</div></label>
+      <label class="check-item"><input type="checkbox" id="incl-followup" checked><div><strong>Follow-up / ACTION REQUIRED</strong> — Reminder email for users who have not yet completed registration.</div></label>
+      <label class="check-item"><input type="checkbox" id="incl-support"><div><strong>Support response template</strong> — Template for responding to users who report issues joining.</div></label>
+    </div>
   </div>
-</div>
-<div class="card">
-  <h2><span class="card-icon">🖼</span> Company Logo</h2>
-  <p class="subtitle">Optional — appears on assets alongside the Amazon Business brand.</p>
-  <div class="logo-upload" id="logo-drop">
-    <div class="upload-icon">📤</div>
-    <p>Click or drag &amp; drop logo here<br><span style="font-size:.7rem;opacity:.7">PNG, JPG, or SVG</span></p>
-    <input type="file" id="logo-input" accept="image/png,image/jpeg,image/svg+xml">
-    <img id="logo-preview" alt="">
-  </div>
-</div>
-<div class="btn-row"><button class="btn btn-primary" onclick="generate()">Generate Plan &amp; Assets →</button></div>
+
+  <div class="btn-row"><button class="btn btn-primary" onclick="generate()">Generate Communication Plan →</button></div>
 </div></div>
+
 <!-- TIMELINE -->
 <div class="page-section" id="section-timeline"><div class="container">
-<div class="stats-bar">
-  <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-num" id="stat-days">--</div><div class="stat-label">Days to Go-Live</div></div>
-  <div class="stat-card"><div class="stat-icon">📧</div><div class="stat-num">4</div><div class="stat-label">Email Touches</div></div>
-  <div class="stat-card"><div class="stat-icon">📄</div><div class="stat-num">7</div><div class="stat-label">Total Assets</div></div>
-  <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-num">3</div><div class="stat-label">Phases</div></div>
-</div>
-<div class="card">
-  <div class="timeline-header">
-    <h2><span class="card-icon">📅</span> Communication Timeline</h2>
-    <div class="timeline-date-edit">
-      <label>Go-Live Date:</label>
-      <input type="date" id="timeline-go-live" onchange="updateTimelineDate()">
-    </div>
+  <div class="stats-bar">
+    <div class="stat-card"><div style="font-size:1.5rem">📅</div><div class="stat-num" id="stat-days">--</div><div class="stat-label">Days to Go-Live</div></div>
+    <div class="stat-card"><div style="font-size:1.5rem">📧</div><div class="stat-num" id="stat-emails">--</div><div class="stat-label">Email Templates</div></div>
+    <div class="stat-card"><div style="font-size:1.5rem">👥</div><div class="stat-num" id="stat-scenarios">--</div><div class="stat-label">User Scenarios</div></div>
+    <div class="stat-card"><div style="font-size:1.5rem">🔌</div><div class="stat-num" id="stat-ingress">--</div><div class="stat-label">Ingress Type</div></div>
   </div>
-  <p class="subtitle">Adjust the go-live date above to recalculate all milestone dates automatically.</p>
-  <div class="timeline" id="timeline-container"></div>
-</div>
+  <div class="card">
+    <div class="tl-header">
+      <h2>📅 Communication Timeline</h2>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <label style="font-size:.82rem;font-weight:600;color:var(--ab-navy)">Go-Live:</label>
+        <input type="date" id="tl-go-live" onchange="updateTimelineDate()">
+      </div>
+    </div>
+    <p class="subtitle">Adjust the go-live date to recalculate all milestone dates automatically.</p>
+    <div class="timeline" id="timeline-container"></div>
+  </div>
 </div></div>
-<!-- CATALOG -->
-<div class="page-section" id="section-catalog"><div class="container">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-  <h2 style="color:var(--ab-navy);display:flex;align-items:center;gap:.5rem"><span>📄</span> Communication Assets</h2>
-  <button class="btn btn-secondary" style="font-size:.8rem;padding:.5rem 1rem" onclick="showSection('setup',document.querySelector('.nav-tab'))">✎ Edit Setup</button>
-</div>
-<div class="catalog-nav" id="filters">
-  <button class="filter-pill active" onclick="setFilter('all',this)">All</button>
-  <button class="filter-pill" onclick="setFilter('pre-launch',this)">Pre-Launch</button>
-  <button class="filter-pill" onclick="setFilter('launch',this)">Go-Live</button>
-  <button class="filter-pill" onclick="setFilter('post-launch',this)">Post-Launch</button>
-</div>
-<div id="catalog"></div>
+
+<!-- ASSETS -->
+<div class="page-section" id="section-assets"><div class="container">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <h2 style="color:var(--ab-navy);font-size:1.2rem">📄 Communication Assets</h2>
+    <button class="btn btn-secondary" style="font-size:.8rem;padding:.5rem 1rem" onclick="showSection('setup',document.querySelector('.nav-tab'))">✎ Edit Setup</button>
+  </div>
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-pill active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-pill" onclick="setFilter('pre-launch',this)">Pre-Launch</button>
+    <button class="filter-pill" onclick="setFilter('launch',this)">Launch</button>
+    <button class="filter-pill" onclick="setFilter('follow-up',this)">Follow-Up</button>
+  </div>
+  <div id="catalog"></div>
 </div></div>
 
 <script>
-let tone='balanced', logoDataUrl=null, currentFilter='all';
+'use strict';
 
-// ── URL Parameter Pre-Population ─────────────────────────────────
-// Accepts: ?company=X&categories=Office,IT&goLive=2026-09-01&procurement=Ariba&tone=formal&autoGenerate=true
-function applyUrlParams(){
-  const p=new URLSearchParams(window.location.search);
-  const company=p.get('company');
-  const categories=p.get('categories');
-  const goLive=p.get('goLive');
-  const procurement=p.get('procurement');
-  const toneParam=p.get('tone');
-  const autoGen=p.get('autoGenerate')==='true';
+// ── State ────────────────────────────────────────────────────────
+var ingressType = null;
+var currentFilter = 'all';
+var generatedAssets = [];
 
-  let anyPrefilled=false;
-
-  if(company){document.getElementById('company-name').value=company;anyPrefilled=true;}
-  if(goLive){document.getElementById('go-live-date').value=goLive;anyPrefilled=true;}
-  if(procurement){document.getElementById('procurement-system').value=procurement;}
-
-  if(categories){
-    const cats=categories.split(',').map(c=>c.trim().toLowerCase());
-    const catMap={'office':'cat-office','breakroom':'cat-breakroom','it':'cat-it','mro':'cat-mro','tail spend':'cat-tailspend'};
-    cats.forEach(c=>{
-      const id=catMap[c];
-      if(id){document.getElementById(id).checked=true;}
-      else{
-        // Handle "other" / custom categories
-        document.getElementById('cat-other').checked=true;
-        document.getElementById('cat-other-text').style.display='block';
-        // Append to any existing other text
-        const existing=document.getElementById('cat-other-text').value;
-        const customCats=cats.filter(cc=>!Object.keys(catMap).includes(cc));
-        document.getElementById('cat-other-text').value=customCats.join(', ');
-      }
-    });
-    anyPrefilled=true;
-  }
-
-  if(toneParam&&['formal','balanced','casual'].includes(toneParam)){
-    tone=toneParam;
-    document.querySelectorAll('.tone-card').forEach((c,i)=>{
-      c.classList.remove('selected');
-      if((i===0&&toneParam==='formal')||(i===1&&toneParam==='balanced')||(i===2&&toneParam==='casual'))c.classList.add('selected');
-    });
-  }
-
-  if(anyPrefilled){
-    const banner=document.getElementById('prefill-banner');
-    banner.classList.add('visible');
-    const parts=[];
-    if(company)parts.push('Company: '+company);
-    if(categories)parts.push('Categories: '+categories);
-    if(goLive)parts.push('Go-Live: '+goLive);
-    document.getElementById('prefill-msg').textContent='✅ Pre-populated from Training Deck Hub — '+parts.join(' · ')+'. Review and generate when ready.';
-  }
-
-  // Auto-generate if requested and required fields are present
-  if(autoGen&&company&&goLive&&getCategories().length>0){
-    setTimeout(()=>generate(),300);
-  }
-}
-
-function showSection(id,el){
-  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('section-'+id).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+// ── Navigation ───────────────────────────────────────────────────
+function showSection(id, el) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
 }
 
-// Logo
-const logoInput=document.getElementById('logo-input');
-const logoDrop=document.getElementById('logo-drop');
-const logoPreview=document.getElementById('logo-preview');
-const headerLogo=document.getElementById('header-logo');
-logoInput.addEventListener('change',function(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(ev){
-    logoDataUrl=ev.target.result;
-    logoPreview.src=logoDataUrl;logoPreview.classList.add('visible');
-    logoDrop.classList.add('has-file');logoDrop.querySelector('p').innerHTML=file.name;
-    headerLogo.src=logoDataUrl;headerLogo.classList.add('visible');
-  };reader.readAsDataURL(file);
-});
-logoDrop.addEventListener('dragover',function(e){e.preventDefault();logoDrop.style.borderColor='var(--ab-orange)';});
-logoDrop.addEventListener('dragleave',function(e){e.preventDefault();logoDrop.style.borderColor='';});
-logoDrop.addEventListener('drop',function(e){
-  e.preventDefault();logoDrop.style.borderColor='';
-  const file=e.dataTransfer.files[0];if(!file||!file.type.startsWith('image/'))return;
-  const dt=new DataTransfer();dt.items.add(file);logoInput.files=dt.files;
-  logoInput.dispatchEvent(new Event('change'));
-});
-
-function selectTone(t,el){tone=t;document.querySelectorAll('.tone-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
-function setFilter(f,el){currentFilter=f;document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderCatalog();}
-
-function getCategories(){
-  const cats=[];
-  if(document.getElementById('cat-office').checked) cats.push('Office');
-  if(document.getElementById('cat-breakroom').checked) cats.push('Breakroom');
-  if(document.getElementById('cat-it').checked) cats.push('IT');
-  if(document.getElementById('cat-mro').checked) cats.push('MRO');
-  if(document.getElementById('cat-tailspend').checked) cats.push('Tail Spend');
-  if(document.getElementById('cat-other').checked){const v=document.getElementById('cat-other-text').value.trim();cats.push(v||'Other');}
-  return cats;
+function selectIngress(type, el) {
+  ingressType = type;
+  document.querySelectorAll('.ingress-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  // Show/hide conditional fields
+  const isPunchout = type === 'punchout' || type === 'punchout-sso';
+  const isUies = type === 'uies' || type === 'punchout-sso';
+  document.getElementById('epro-field').style.display = isPunchout ? 'block' : 'none';
+  document.getElementById('idp-field-wrap').style.display = type === 'punchout-sso' ? 'block' : 'none';
+  document.getElementById('sharable-link-field').style.display = isUies ? 'block' : 'none';
+  // Role-based emails only relevant for DA
+  const roleSection = document.getElementById('incl-approver').closest('.card');
+  document.getElementById('incl-approver').closest('.check-item').style.opacity = (type === 'da') ? '1' : '.4';
+  document.getElementById('incl-admin').closest('.check-item').style.opacity = (type === 'da') ? '1' : '.4';
 }
 
-function getFormData(){
-  return {
-    company:document.getElementById('company-name').value.trim()||'[Company]',
-    goLive:document.getElementById('timeline-go-live').value||document.getElementById('go-live-date').value,
-    procurement:document.getElementById('procurement-system').value.trim(),
-    contactName:document.getElementById('contact-name').value.trim(),
-    contactEmail:document.getElementById('contact-email').value.trim(),
-    categories:getCategories(),
-    tone:tone,logo:logoDataUrl
-  };
-}
-
-function formatDate(d){if(!d)return '[Date]';const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});}
-function shortDate(d){if(!d)return '--';const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
-function addDays(dateStr,days){const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+days);return d.toISOString().split('T')[0];}
-function daysBetween(d1,d2){return Math.round((new Date(d2)-new Date(d1))/(1000*60*60*24));}
-
-function updateTimelineDate(){
-  const newDate=document.getElementById('timeline-go-live').value;
-  if(newDate){
-    document.getElementById('go-live-date').value=newDate;
-    renderTimeline(getFormData());
-    renderCatalog();
-  }
-}
-
-function renderTimeline(data){
-  const gl=data.goLive;if(!gl)return;
-  const today=new Date().toISOString().split('T')[0];
-  const daysToGo=daysBetween(today,gl);
-  document.getElementById('stat-days').textContent=daysToGo>0?daysToGo:'Live!';
-  document.getElementById('timeline-go-live').value=gl;
-  const milestones=[
-    {date:addDays(gl,-21),title:'Pre-Launch Announcement',desc:'Introduce Amazon Business as a preferred supplier. Build awareness about the partnership and what it means for employees.',assets:['Pre-Launch Email','Quick Start Guide'],color:''},
-    {date:addDays(gl,-14),title:'Training & Enablement',desc:'Send training invitations. Provide access details and walkthrough of the ordering process.',assets:['Training Invitation Email'],color:''},
-    {date:addDays(gl,-7),title:'Final Reminder & Visibility',desc:'Distribute posters and banners. Send a final reminder about the upcoming launch.',assets:['Reminder Email','Poster','Intranet Banner'],color:'teal'},
-    {date:gl,title:'Go-Live Day &#127881;',desc:'Official launch! Send the go-live announcement. All channels active.',assets:['Go-Live Email','Poster','Banner'],color:'green'},
-    {date:addDays(gl,7),title:'Week 1 Follow-Up',desc:'Check adoption metrics. Address questions and reinforce the ordering process.',assets:['Adoption Reminder Email'],color:'teal'},
-    {date:addDays(gl,30),title:'30-Day Adoption Push',desc:'Share tips, highlight badge system, and remind users about preferred items and pricing benefits.',assets:['Adoption Reminder Email'],color:'teal'},
-  ];
-  document.getElementById('timeline-container').innerHTML=milestones.map(m=>`
-    <div class="timeline-item">
-      <div class="timeline-dot ${m.color}"></div>
-      <div class="timeline-content">
-        <div class="tl-date">${shortDate(m.date)}</div>
-        <h4>${m.title}</h4>
-        <p>${m.desc}</p>
-        <div class="tl-assets">${m.assets.map(a=>'<span class="tl-tag">'+a+'</span>').join('')}</div>
-      </div>
-    </div>`).join('');
-}
-
-const assets=[
-  {id:'pre-announce',phase:'pre-launch',type:'Email',title:'Pre-Launch Announcement',desc:'Introduces the Amazon Business partnership'},
-  {id:'training-invite',phase:'pre-launch',type:'Email',title:'Training Invitation',desc:'Invites users to on-demand training'},
-  {id:'one-pager',phase:'pre-launch',type:'One-Pager',title:'Quick Start Guide',desc:'One-page ordering reference'},
-  {id:'go-live-email',phase:'launch',type:'Email',title:'Go-Live Announcement',desc:'Official launch day communication'},
-  {id:'poster-launch',phase:'launch',type:'Poster',title:'Launch Day Poster',desc:'Visual for common areas'},
-  {id:'banner',phase:'launch',type:'Banner',title:'Intranet Banner',desc:'Digital banner for internal sites'},
-  {id:'reminder',phase:'post-launch',type:'Email',title:'Adoption Reminder',desc:'Encourages continued usage'},
-];
-
-function generateContent(asset,data){
-  const cat=data.categories.length?data.categories.join(', '):'your approved categories';
-  const punchout=data.procurement?'the Amazon punchout through '+data.procurement:'Amazon Business';
-  const dontUse=data.procurement?'Remember to use '+punchout+' and do not login to your personal Amazon account to pay for orders.':'Remember to use your corporate credentials and do not use personal Amazon accounts for business purchases.';
-  const T={
-    formal:{greeting:'Dear Colleagues,',close:'Thank you for your compliance with this procurement directive.',signoff:'Procurement Department',intro:(c)=>`${c} has designated Amazon Business as the required supplier for ${cat} items. All employees are directed to utilize this channel for ${cat} procurement effective ${formatDate(data.goLive)}.`,means:'Mandatory Requirements',benefits:['Approved product selection for '+cat,'Policy-compliant pricing with organizational spend tracking','Expedited delivery on qualifying items and dedicated support'],badge:'Employees must prioritize items displaying the purple "Most Preferred" and green "Preferred" badges, which represent pre-approved items meeting organizational standards.',outside:'Items outside the Most Preferred and Preferred categories may be sourced through Amazon Business subject to standard approval workflows.',training:'Mandatory training materials are available via the link below. All personnel must complete training prior to placing orders.',warning:dontUse},
-    balanced:{greeting:'',close:'Thank you for your ongoing support and utilization of Amazon Business.',signoff:data.contactName||'Strategic Project Solutions',intro:(c)=>`${c} has partnered with Amazon Business as a preferred supplier for ${cat} items. This provides an easy purchasing experience, competitive pricing and fast, free shipping through Business Prime.`,means:'What this means for you',benefits:['Broad '+cat+' product selection','Competitive pricing with spend tracking to support future discounts','Free 2-day delivery on most items and strong customer support'],badge:'To place orders, employees should access '+punchout+' and look for items marked with the purple "Most Preferred" and green "Preferred" badge representing pre-approved items that offer the best value for '+data.company+'.',outside:'Items outside the Most Preferred and Preferred categories can still be sourced through Amazon Business, often with competitive pricing, strong availability, and faster delivery.',training:'On-demand training is available here.',warning:dontUse},
-    casual:{greeting:'Hey team! &#128075;',close:'Thanks for being awesome and using Amazon Business! &#128640;',signoff:data.contactName||'Your Procurement Crew',intro:(c)=>`Great news! &#127881; ${c} has teamed up with Amazon Business for all your ${cat} needs. Think: easy ordering, great prices, and super fast shipping with Business Prime!`,means:'Here\'s what you get &#127881;',benefits:['Tons of '+cat+' products at your fingertips &#128722;','Sweet pricing that gets even better as we buy more &#128176;','Free 2-day shipping on most stuff + awesome support &#128666;'],badge:'When you\'re shopping, look for the purple "Most Preferred" &#128156; and green "Preferred" &#128154; badges — those are the pre-approved items with the best deals for '+data.company+'!',outside:'Can\'t find what you need in the badge items? No worries! You can still order other stuff on Amazon Business — usually with great prices and fast delivery too.',training:'We\'ve got easy training ready for you — check it out here!',warning:'&#9888;&#65039; Important: Always use '+punchout+' — don\'t use your personal Amazon account for work orders!'}
-  };
-  const t=T[data.tone];
-  if(asset.id==='pre-announce'||asset.id==='go-live-email'){
-    const isLaunch=asset.id==='go-live-email';
-    const title=isLaunch?'Amazon Business for '+cat+' is Live!':'Amazon Business for '+data.company;
-    const subtitle=isLaunch?'Your new '+cat+' ordering experience starts today':'Coming '+formatDate(data.goLive);
-    return `<div class="doc-banner"><div class="ab-mark">AMAZON BUSINESS</div><h2>${title}</h2><div class="cust-name">${data.company}</div>${!isLaunch?'<div class="sub">'+subtitle+'</div>':''}</div><div class="doc-content">${t.greeting?'<p>'+t.greeting+'</p>':''}<p>${t.intro(data.company)}</p><span class="sec-head">${t.means}</span><ul>${t.benefits.map(b=>'<li>'+b+'</li>').join('')}</ul><p>${t.badge}</p><div class="badge-row"><span class="badge-pill badge-purple">&#9733; Most Preferred</span><span class="badge-pill badge-green">&#10003; Preferred</span></div><p>${t.outside}</p><p>${t.training}</p><div class="warning-box">${t.warning}</div><p>${t.close}</p><div class="signoff">Sincerely,<br><strong>${t.signoff}</strong></div></div>`;
-  }
-  if(asset.id==='training-invite') return `<div class="doc-banner"><div class="ab-mark">AMAZON BUSINESS</div><h2>Training: Amazon Business for ${cat}</h2><div class="cust-name">${data.company}</div></div><div class="doc-content">${t.greeting?'<p>'+t.greeting+'</p>':''}<p>${data.tone==='casual'?"We've got training ready so you can start ordering like a pro!":(data.tone==='formal'?'All personnel are required to complete Amazon Business training prior to the go-live date.':'On-demand training is now available to help you get started with Amazon Business for '+cat+' ordering.')}</p><span class="sec-head">What You'll Learn</span><ul><li>How to access Amazon Business${data.procurement?' through '+data.procurement:''}</li><li>Navigating the ${cat} catalog</li><li>Understanding the "Most Preferred" and "Preferred" badge system</li><li>Placing orders and approval workflows</li><li>Tips for finding the best pricing</li></ul><div class="badge-row"><span class="badge-pill badge-purple">&#9733; Most Preferred</span><span class="badge-pill badge-green">&#10003; Preferred</span></div><div class="cta-box">${data.tone==='casual'?'&#128073; Click here to start your training!':'Access training here: [Training Link]'}</div><div class="warning-box">${t.warning}</div><div class="signoff">Sincerely,<br><strong>${t.signoff}</strong></div></div>`;
-  if(asset.id==='one-pager') return `<div class="doc-banner"><div class="ab-mark">QUICK START GUIDE</div><h2>Amazon Business at ${data.company}</h2><div class="sub">Your guide to ${cat} purchasing</div></div><div class="doc-content"><span class="sec-head">Step 1: Access Amazon Business</span><p>${data.procurement?'Use the Amazon punchout through <strong>'+data.procurement+'</strong>. Do not log in through personal Amazon.':'Go to amazonbusiness.com with your corporate credentials.'}</p><span class="sec-head">Step 2: Find the Right Products</span><p>Look for items with the badge indicators:</p><div class="badge-row"><span class="badge-pill badge-purple">&#9733; Most Preferred</span> <span style="font-size:.78rem;color:var(--ab-muted)">— Best value, pre-approved</span></div><div class="badge-row"><span class="badge-pill badge-green">&#10003; Preferred</span> <span style="font-size:.78rem;color:var(--ab-muted)">— Approved, good value</span></div><p>These represent pre-approved items that offer the best value for ${data.company}.</p><span class="sec-head">Step 3: Place Your Order</span><ul><li>Add items to cart</li><li>Select shipping address and cost center</li><li>Submit — orders route through standard approval</li></ul><div class="warning-box">${t.warning}</div><div class="cta-box">Need help? Contact ${data.contactName||'your procurement team'}${data.contactEmail?' at '+data.contactEmail:''}</div></div>`;
-  if(asset.id==='reminder') return `<div class="doc-banner"><div class="ab-mark">AMAZON BUSINESS</div><h2>${data.tone==='casual'?'Don\'t forget! &#128075;':'Reminder'}: Amazon Business for ${cat}</h2><div class="cust-name">${data.company}</div></div><div class="doc-content">${t.greeting?'<p>'+t.greeting+'</p>':''}<p>${data.tone==='casual'?'Just a quick nudge — Amazon Business is your go-to for '+cat+' ordering! &#128640;':(data.tone==='formal'?'This is a reminder that all '+cat+' purchases must be routed through Amazon Business per procurement policy.':'Just a reminder that Amazon Business is available for all your '+cat+' needs.')}</p><span class="sec-head">Why Amazon Business?</span><ul>${t.benefits.map(b=>'<li>'+b+'</li>').join('')}</ul><p>${t.badge}</p><div class="badge-row"><span class="badge-pill badge-purple">&#9733; Most Preferred</span><span class="badge-pill badge-green">&#10003; Preferred</span></div><div class="warning-box">${t.warning}</div><p>${t.close}</p><div class="signoff">Sincerely,<br><strong>${t.signoff}</strong></div></div>`;
-  if(asset.id==='poster-launch') return `<div class="doc-banner" style="padding:2.5rem;text-align:center"><div class="ab-mark">AMAZON BUSINESS</div><h2 style="font-size:1.5rem;margin:.5rem 0">${data.tone==='casual'?'&#128640; Shop Smart!':'Amazon Business for '+cat}</h2><div class="cust-name" style="font-size:1.8rem">${data.company}</div><div class="sub" style="font-size:1rem;margin-top:.5rem">${data.tone==='formal'?'Official Preferred Supplier for '+cat:'Your preferred supplier for '+cat}</div></div><div class="doc-content" style="text-align:center;padding:2rem"><div class="badge-row" style="justify-content:center"><span class="badge-pill badge-purple">&#9733; Most Preferred</span><span class="badge-pill badge-green">&#10003; Preferred</span></div><p style="margin:1rem 0;font-size:.95rem">Look for these badges when ordering for the best value</p><ul style="text-align:left;max-width:400px;margin:1rem auto"><li>Competitive pricing & spend tracking</li><li>Free 2-day delivery on most items</li><li>Easy ordering${data.procurement?' through '+data.procurement:''}</li></ul><div class="warning-box" style="text-align:left;max-width:400px;margin:1rem auto">${t.warning}</div></div>`;
-  if(asset.id==='banner') return `<div style="background:var(--ab-gradient);padding:2rem;text-align:center;border-radius:12px"><p style="color:var(--ab-orange);font-weight:700;font-size:1.3rem;margin:0">Amazon Business for ${cat} ${data.tone==='casual'?'&#127881;':''}| ${data.company}</p><p style="color:#fff;margin:.4rem 0 0;font-size:.9rem">${data.tone==='casual'?'Shop now for great prices & fast delivery! &#128722;':(data.tone==='formal'?'All '+cat+' purchases must be routed through Amazon Business.':'Competitive pricing \u2022 Free 2-day delivery \u2022 Easy ordering')}</p><div style="margin-top:.8rem"><span style="background:var(--ab-purple);color:#fff;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;font-weight:700;margin-right:.3rem">&#9733; Most Preferred</span><span style="background:var(--ab-success);color:#fff;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;font-weight:700">&#10003; Preferred</span></div></div>`;
-  return '<div class="doc-content"><p>Content coming soon.</p></div>';
-}
-
-function renderCatalog(){
-  const data=getFormData();
-  const container=document.getElementById('catalog');
-  const filtered=currentFilter==='all'?assets:assets.filter(a=>a.phase===currentFilter);
-  container.innerHTML=filtered.map(a=>`
-    <div class="doc-card" id="card-${a.id}">
-      <div class="doc-card-bar">
-        <div><span class="pill">${a.phase}</span><span class="fmt">${a.type}</span><h3 style="display:inline">${a.title}</h3></div>
-        <div><button class="btn-edit-d" onclick="toggleEdit('${a.id}')">&#9998; Edit</button><button class="btn-dl-d" onclick="downloadDoc('${a.id}')">&#11015; Download</button></div>
-      </div>
-      <div class="doc-body">${generateContent(a,data)}</div>
-      <div class="doc-edit" id="edit-${a.id}"><textarea id="textarea-${a.id}"></textarea><div class="doc-edit-btns"><button onclick="toggleEdit('${a.id}')" style="background:var(--ab-border)">Cancel</button><button onclick="applyEdit('${a.id}')" style="background:var(--ab-orange);color:#fff">Apply</button></div></div>
-    </div>`).join('');
-}
-
-function toggleEdit(id){
-  const ed=document.getElementById('edit-'+id);const ta=document.getElementById('textarea-'+id);
-  const body=document.querySelector('#card-'+id+' .doc-body');
-  if(ed.classList.contains('open')){ed.classList.remove('open');}
-  else{ta.value=body.innerHTML;ed.classList.add('open');}
-}
-function applyEdit(id){document.querySelector('#card-'+id+' .doc-body').innerHTML=document.getElementById('textarea-'+id).value;document.getElementById('edit-'+id).classList.remove('open');}
-function downloadDoc(id){
-  const body=document.querySelector('#card-'+id+' .doc-body');
-  const blob=new Blob(['<html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;max-width:700px;margin:2rem auto;line-height:1.7;color:#232f3e}ul{margin:.5rem 0}li{margin-bottom:.4rem}.badge-pill{display:inline-block;padding:.2rem .5rem;border-radius:4px;font-size:.75rem;font-weight:700;margin-right:.3rem}.badge-purple{background:#6f42c1;color:#fff}.badge-green{background:#067d62;color:#fff}</style></head><body>'+body.innerHTML+'</body></html>'],{type:'text/html'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=id+'.html';a.click();URL.revokeObjectURL(url);
-}
-
-function generate(){
-  const name=document.getElementById('company-name').value.trim();
-  const goLive=document.getElementById('go-live-date').value;
-  if(!name){alert('Please enter a Company Name.');return;}
-  if(!goLive){alert('Please select a Go-Live Date.');return;}
-  if(getCategories().length===0){alert('Please select at least one category endorsement.');return;}
-  document.getElementById('timeline-go-live').value=goLive;
-  renderTimeline(getFormData());
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
   renderCatalog();
-  showSection('timeline',document.getElementById('tab-timeline'));
 }
 
-// Run URL param population on load
-window.addEventListener('DOMContentLoaded', applyUrlParams);
+// ── Date helpers ─────────────────────────────────────────────────
+function fmtDate(d) { if (!d) return '[Launch Date]'; const dt = new Date(d + 'T00:00:00'); return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }); }
+function shortDate(d) { if (!d) return '--'; const dt = new Date(d + 'T00:00:00'); return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+function addDays(ds, n) { const d = new Date(ds + 'T00:00:00'); d.setDate(d.getDate() + n); return d.toISOString().split('T')[0]; }
+function daysBetween(d1, d2) { return Math.round((new Date(d2) - new Date(d1)) / (1000 * 60 * 60 * 24)); }
+
+function updateTimelineDate() {
+  const nd = document.getElementById('tl-go-live').value;
+  if (nd) { document.getElementById('go-live-date').value = nd; renderTimeline(getFormData()); }
+}
+
+// ── Form data ────────────────────────────────────────────────────
+function getFormData() {
+  return {
+    company: document.getElementById('company-name').value.trim() || '[Company]',
+    goLive: document.getElementById('tl-go-live').value || document.getElementById('go-live-date').value,
+    poc: document.getElementById('contact-name').value.trim() || 'NAME/TITLE',
+    policyLink: document.getElementById('policy-link').value.trim(),
+    categories: document.getElementById('categories').value.trim() || 'approved items',
+    hasPrime: document.getElementById('has-prime').value === 'yes',
+    epro: document.getElementById('epro-system').value.trim() || 'EPRO SYSTEM',
+    idp: document.getElementById('idp-name').value.trim() || 'IDP',
+    sharableLink: document.getElementById('sharable-link').value.trim() || '[Sharable Link]',
+    ingress: ingressType,
+    scNew: document.getElementById('sc-new').checked,
+    scExisting: document.getElementById('sc-existing').checked,
+    scMultiUser: document.getElementById('sc-multiuser').checked,
+    inclApprover: document.getElementById('incl-approver').checked && ingressType === 'da',
+    inclAdmin: document.getElementById('incl-admin').checked && ingressType === 'da',
+    inclPrelaunch: document.getElementById('incl-prelunch').checked,
+    inclFollowup: document.getElementById('incl-followup').checked,
+    inclSupport: document.getElementById('incl-support').checked
+  };
+}
+
+// ── Shared email fragments ────────────────────────────────────────
+function benefitsList() {
+  return `<ul>
+    <li><strong>Fast, free shipping:</strong> Same-day, one-day, and 2-day delivery on Prime-eligible items</li>
+    <li><strong>Everything in one place:</strong> Find office supplies, breakroom essentials, and more without juggling multiple vendors</li>
+    <li><strong>Low Prices:</strong> Access quantity discounts on popular brands and products</li>
+    <li><strong>Time-savers:</strong> Create custom shopping lists and set up recurring deliveries</li>
+    <li><strong>Mobile convenience:</strong> Shop on the go with the Amazon Business mobile app</li>
+    <li><strong>Dedicated support:</strong> Get help from a specialized Amazon Business customer service team</li>
+  </ul>`;
+}
+
+function supportFooter(d) {
+  const pol = d.policyLink ? `For company policy related questions, please contact ${d.poc} or reference our procurement policies <a href="${d.policyLink}">here</a>.` : `For company policy related questions, please contact ${d.poc}.`;
+  return `<p><strong>Need Help with Orders?</strong><br>Contact Amazon Business Customer Support online or by phone at <strong>(866) 486-2360</strong>.</p><p>${pol}</p>`;
+}
+
+function trainingLinks() {
+  return `<p><strong>Learn More:</strong><br>Join an upcoming walkthrough of our account and features by our Amazon Business rep. Please create your account prior to joining a live session.<br>
+  <em>Insert Date @ Insert Time: Link here to join</em><br>
+  <em>Insert Date @ Insert Time: Link here to join</em></p>`;
+}
+
+function signoff(d) {
+  return `<div class="signoff">Thank you,<br><strong>${d.poc}</strong></div>`;
+}
+
+function primeSuffix(d) { return d.hasPrime ? ' with Business Prime' : ''; }
+
+// ── Getting Started by ingress/scenario ──────────────────────────
+function getStartedDA(scenario) {
+  if (scenario === 'new') return `<span class="sec-head">Getting Started</span><p>An email was sent from <strong>Business@Amazon.com</strong> to your work email address. Follow the instructions in your email and reference the <a href="#">registration guide</a> to set your account password and begin shopping on Amazon Business. If you can't find your email, check your spam/junk folders, or call <strong>844-428-3060</strong>.</p>`;
+  if (scenario === 'existing') return `<span class="sec-head">Getting Started</span><p>An email was sent from <strong>Business@Amazon.com</strong> to your work email address. Follow the instructions in your email and reference the <a href="#">registration guide</a> to set up your account and begin shopping on Amazon Business. If you can't find your email, check your spam/junk folders, or call <strong>844-428-3060</strong>.</p>
+  <p><strong>Do you have another Amazon account associated with your work email address?</strong></p>
+  <ul>
+    <li><strong>Yes, and it is for work purchasing only:</strong> Migrate your existing account during registration.</li>
+    <li><strong>Yes, and it is for personal, or a mix of work and personal purchasing:</strong>
+      <ul><li>Update your current account to a personal email address before registering, or</li>
+      <li>Follow the prompts to associate a personal email address with your existing account during registration.</li></ul>
+    </li>
+  </ul>
+  <p>See these short videos and guides: <a href="#">Migrate your existing account</a> | <a href="#">Update to a personal email</a> | <a href="#">Associate a personal email during registration</a></p>`;
+  if (scenario === 'multiuser') return `<span class="sec-head">Getting Started</span><p>An email was sent from <strong>Business@Amazon.com</strong> to your work email address. Follow the instructions in your email and reference the <a href="#">registration guide</a> to set up your account. If you can't find your email, check your spam/junk folders, or call <strong>844-428-3060</strong>.</p>
+  <p><strong>Do you have another Amazon account associated with your work email address?</strong> Migrate your account and any other account users during the registration process.</p>
+  <ol><li>Click on the button in your invitation email</li><li>Login to your current account</li><li>Agree to migrate your account</li></ol>` + migrationInfo();
+  return '';
+}
+
+function getStartedPunchout(d, scenario) {
+  const base = `<span class="sec-head">Getting Started</span><p>Navigate to <strong>${d.company} ${d.epro}</strong> and select the Amazon Business tile to activate your Amazon Business account login.</p>`;
+  if (scenario === 'existing') return base + `<p><strong>Do you have another Amazon account associated with your work email address?</strong><br>Reference this <a href="#">user registration workflow</a> to complete your registration.</p>`;
+  if (scenario === 'multiuser') return base + `<p><strong>Do you have another Amazon account associated with your work email address?</strong> Migrate your account and any other account users during the registration process.</p><ol><li>Click on the button in your invitation email</li><li>Login to your current account</li><li>Agree to migrate your account</li></ol>` + migrationInfo();
+  return base;
+}
+
+function getStartedUies(d, scenario) {
+  const base = `<span class="sec-head">Getting Started</span><p>Click <a href="${d.sharableLink}"><strong>here</strong></a> to set up your login.</p>`;
+  if (scenario === 'existing') return base + `<p><strong>Do you have another Amazon account associated with your work email address?</strong><br>Reference this <a href="#">user registration workflow</a> to complete your registration.</p>`;
+  if (scenario === 'multiuser') return base + `<p><strong>Do you have another Amazon account associated with your work email address?</strong> Migrate your account and any other account users during the registration process.</p><ol><li>Click on the button in your invitation email</li><li>Login to your current account</li><li>Agree to migrate your account</li></ol>` + migrationInfo();
+  return base;
+}
+
+function getStartedPunchoutSSO(d, scenario) {
+  const base = `<span class="sec-head">Getting Started</span><p>Effective immediately, Amazon Business is accessible via <strong>${d.epro}</strong> through <strong>${d.idp}</strong>. We encourage you to punchout today to ensure access.</p>`;
+  if (scenario === 'existing') return base + `<p><strong>Do you have another Amazon account associated with your work email address?</strong><br>Reference this <a href="#">user registration workflow</a> to complete your registration.</p>`;
+  if (scenario === 'multiuser') return base + `<p>An email was sent from Business@Amazon.com to your work email address. Follow the instructions and <strong>Scenario 4</strong> in the <a href="#">registration guide</a> to set up your account.</p>` + `<p><strong>Do you have another Amazon account associated with your work email address?</strong> Migrate your account and any other account users during the registration process.</p><ol><li>Click on the button in your invitation email</li><li>Login to your current account</li><li>Agree to migrate your account</li></ol>` + migrationInfo();
+  return base;
+}
+
+function migrationInfo() {
+  return `<div class="warn-box"><strong>Things to know before migrating:</strong><br>
+  <strong>When you agree to migrate:</strong> The ${'{company}'} account administrator for Amazon Business is notified of your consent.<br><br>
+  <strong>When the migration is complete:</strong>
+  <ul>
+    <li>You and all other members of this account will join the official Amazon Business account</li>
+    <li>You will receive a pro-rated refund of your Business Prime Membership (if applicable)</li>
+    <li>Purchases in this existing account will be fulfilled</li>
+    <li>Pending invitations to this account will expire</li>
+    <li>Order histories transfer to the official account if individual credit cards were used for purchasing</li>
+    <li>If a shared payment method was used, order histories will not migrate. Please download your purchase history before proceeding: "Hello" menu &gt; "Business Analytics" &gt; "Reports" &gt; "Orders" &gt; Set a time period &gt; "Generate Report"</li>
+    <li>This account will be closed. You and other members will log into the official account with the same email addresses and passwords.</li>
+  </ul>
+  <p>If you do not choose to migrate this account, the Amazon Business account administrator for your account will be automatically notified.</p></div>`;
+}
+
+function needHelpJoin() {
+  return `<p><strong>Need Help Joining the Account?</strong><br><a href="#">Click here</a> or call <strong>844-428-3060</strong> to speak with a dedicated support team to walk you through the process.</p>`;
+}
+
+// ── Template builders ────────────────────────────────────────────
+function buildBanner(company, title, subtitle) {
+  return `<div class="doc-banner"><div class="ab-mark">AMAZON BUSINESS</div><h2>${title}</h2><div class="cust-name">${company}</div>${subtitle ? '<div class="sub">' + subtitle + '</div>' : ''}</div>`;
+}
+
+function buildPrelaunch(d) {
+  const ingressNote = (d.ingress === 'punchout' || d.ingress === 'punchout-sso') ? ` through ${d.epro}` : (d.ingress === 'punchout-sso') ? ` through ${d.epro}/${d.idp}` : '';
+  return buildBanner(d.company, 'Coming Soon: Amazon Business for ' + d.company + primeSuffix(d), 'Launching ' + fmtDate(d.goLive)) +
+  `<div class="doc-content">
+    <p>[Greeting],</p>
+    <p><strong>${d.company}</strong> is excited to share that we have partnered with Amazon Business to simplify day-to-day supplies purchasing. Starting <strong>${fmtDate(d.goLive)}</strong>, we'll have access to a centralized Amazon Business account${ingressNote} for ordering <strong>${d.categories}</strong>.</p>
+    <span class="sec-head">What's in it for you?</span>
+    <p>Amazon Business includes benefits to help you save time and make the most of your department budget:</p>
+    ${benefitsList()}
+    <span class="sec-head">Getting Started</span>
+    <p>On <strong>${fmtDate(d.goLive)}</strong>, you'll receive an invitation${d.ingress === 'uies' ? ' with a link' : ' from business@amazon.com'} to join our company account. Please register when you get the email — it only takes a few minutes. Then use this new account for your work-related Amazon purchases going forward.</p>
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildApproverPrelaunch(d) {
+  return buildBanner(d.company, 'Coming Soon: Amazon Business for ' + d.company + primeSuffix(d), 'Approver Pre-Launch — ' + fmtDate(d.goLive)) +
+  `<div class="doc-content">
+    <p>[Greeting],</p>
+    <p><strong>${d.company}</strong> is excited to share that we have partnered with Amazon Business to simplify day-to-day supplies purchasing. Starting <strong>${fmtDate(d.goLive)}</strong>, we'll have access to a centralized Amazon Business account for ordering <strong>${d.categories}</strong>.</p>
+    <p>You have been designated as an <strong>Approver</strong> within ${d.company}'s Amazon Business account. To ensure all approval workflows are enabled prior to launch, we need you to set up your Amazon Business profile. <span class="action-badge">ACTION REQUIRED</span> Please complete registration by <strong>[DUE DATE]</strong>.</p>
+    <span class="sec-head">What's in it for you?</span>
+    ${benefitsList()}
+    <span class="sec-head">Getting Started</span>
+    <p>On <strong>[Approver Launch Date]</strong>, you'll receive an invitation from business@amazon.com to join our company account. Please register when you get the email – it only takes a few minutes.</p>
+    <p><em>NOTE: Buying on Amazon will not be enabled until all policies are in place and all users are added into the account.</em></p>
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildApproverLaunch(d) {
+  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', 'Approver Launch') +
+  `<div class="doc-content">
+    <p>[Greeting],</p>
+    <p>Following our announcement on <strong>XX/XX</strong>, we're excited to share that the new <strong>${d.company} Amazon Business account${primeSuffix(d)}</strong> is now available for <strong>${d.categories}</strong> purchasing starting today.</p>
+    ${getStartedDA('new')}
+    ${needHelpJoin()}
+    ${trainingLinks()}
+    ${supportFooter(d)}
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildApproverFollowup(d) {
+  return buildBanner(d.company, 'ACTION REQUIRED: Join ' + d.company + ' Amazon Business account', 'Approver Follow-Up') +
+  `<div class="doc-content">
+    <p><span class="action-badge">URGENT ACTION REQUIRED</span></p>
+    <p>You are receiving this email because you have not yet set up your Amazon Business account. You will receive another email to join on <strong>[DATE]</strong>. If you don't receive this email by end of day, please check your SPAM folder, or search for emails sent from business@amazon.com.</p>
+    <p>As a reminder, you are a designated <strong>Amazon Business Approver</strong> for your purchasing group. This includes responsibility for reviewing and approving Amazon Business orders on behalf of ${d.company}. Please attend at least one Webinar/Training session.</p>
+    ${benefitsList()}
+    <p>For questions about joining the account, contact Amazon Business Customer Support <a href="#">HERE</a> or call <strong>844-428-3060</strong>. For all other questions, please contact ${d.poc} or Amazon Business Customer Service.</p>
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildAdminPrelaunch(d) {
+  return buildBanner(d.company, 'Coming Soon: Amazon Business for ' + d.company + primeSuffix(d), 'Administrator Pre-Launch — ' + fmtDate(d.goLive)) +
+  `<div class="doc-content">
+    <p>[Greeting],</p>
+    <p><strong>${d.company}</strong> is excited to share that we have partnered with Amazon Business to simplify day-to-day supplies purchasing. Starting <strong>${fmtDate(d.goLive)}</strong>, we'll have access to a centralized Amazon Business account for ordering <strong>${d.categories}</strong>.</p>
+    <span class="sec-head">What's in it for you?</span>
+    ${benefitsList()}
+    <span class="sec-head">Getting Started</span>
+    <p>On <strong>${fmtDate(d.goLive)}</strong>, you'll receive an invitation from business@amazon.com to join our company account. Please register when you get the email – it only takes a few minutes.</p>
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildAdminLaunch(d) {
+  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', 'Administrator Launch') +
+  `<div class="doc-content">
+    <p>[Greeting],</p>
+    <p>Following our announcement on <strong>XX/XX</strong>, we're excited to share that the new <strong>${d.company} Amazon Business account${primeSuffix(d)}</strong> is now available for <strong>${d.categories}</strong> purchasing starting today.</p>
+    ${getStartedDA('new')}
+    <p>You have been designated as an <strong>Amazon Business Administrator</strong> for your purchasing group. As an Administrator, you will be responsible for a number of features and user management.</p>
+    ${needHelpJoin()}
+    ${trainingLinks()}
+    ${supportFooter(d)}
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildAdminFollowup(d) {
+  return buildBanner(d.company, 'ACTION REQUIRED: Complete registration', 'Administrator Follow-Up') +
+  `<div class="doc-content">
+    <p><span class="action-badge">URGENT ACTION REQUIRED</span></p>
+    <p>You are receiving this email because you have not yet set up your Amazon Business account. You will receive another registration email on <strong>[DATE]</strong>. If you don't receive this email by end of day, please check your SPAM folder, or search for emails sent from business@amazon.com.</p>
+    <p>As a reminder, you are a designated <strong>Amazon Business Administrator</strong> for your purchasing group. This includes responsibility for several group features and end user management. Please attend at least one Webinar/Training session.</p>
+    ${benefitsList()}
+    <p>For questions about joining the account, contact Amazon Business Customer Support <a href="#">HERE</a> or call <strong>844-428-3060</strong>. For all other questions, please contact ${d.poc} or Amazon Business Customer Service.</p>
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildLaunchEmail(d, scenario) {
+  const scenarioLabels = { new: 'New to Amazon (Auto-Created Accounts)', existing: 'Existing Single User Account', multiuser: 'Admin on Multi-User Outside Account' };
+  const label = scenarioLabels[scenario] || scenario;
+  let gettingStarted = '';
+  if (d.ingress === 'da') gettingStarted = getStartedDA(scenario);
+  else if (d.ingress === 'punchout') gettingStarted = getStartedPunchout(d, scenario);
+  else if (d.ingress === 'uies') gettingStarted = getStartedUies(d, scenario);
+  else if (d.ingress === 'punchout-sso') gettingStarted = getStartedPunchoutSSO(d, scenario);
+
+  const uiesLegal = (d.ingress === 'uies' || d.ingress === 'punchout-sso') ? `<div class="legal-box"><strong>⚖️ Legal Notice (UIES requirement):</strong> Per Amazon Business legal guidelines, this email must include: (1) notice that an AB account was created on the user's behalf; (2) a link to password assistance; (3) a link to the <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GFUSWPZP368LFFA9">Amazon Business Acceptable Use Policy</a>.</div>` : '';
+
+  const ingressContext = (d.ingress === 'punchout' || d.ingress === 'punchout-sso')
+    ? ` through <strong>${d.epro}</strong>` : '';
+
+  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', label) +
+  `<div class="doc-content">
+    ${uiesLegal}
+    <p>[Greeting],</p>
+    <p>Following our announcement on <strong>XX/XX</strong>, we're excited to share that the new <strong>${d.company} Amazon Business account${primeSuffix(d)}</strong> is now available for <strong>${d.categories}</strong> purchasing${ingressContext} starting today.</p>
+    ${gettingStarted}
+    ${needHelpJoin()}
+    ${trainingLinks()}
+    ${supportFooter(d)}
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildFollowup(d) {
+  return buildBanner(d.company, 'ACTION REQUIRED: Registration Support', 'Follow-Up for users who have not yet joined') +
+  `<div class="doc-content">
+    <p><span class="action-badge">ACTION REQUIRED</span></p>
+    <p>If you're having issues joining <strong>${d.company}'s</strong> Amazon Business account, we have a dedicated support team to walk you through the process.</p>
+    <span class="sec-head">For existing retail Amazon customers</span>
+    <p>Click the link below to be connected with an agent on a pre-authenticated line.</p>
+    <p><a href="#"><strong>Contact us →</strong></a></p>
+    <span class="sec-head">For customers new to Amazon</span>
+    <p>Call us at <strong>844-428-3060</strong> for assistance.</p>
+    ${signoff(d)}
+  </div>`;
+}
+
+function buildSupportResponse(d) {
+  return buildBanner(d.company, 'Need Help Joining ' + d.company + ' Amazon Business Account?', 'Support Response Template') +
+  `<div class="doc-content">
+    <p>Thanks for reaching out. See the information below for help joining your organization's Amazon Business account.</p>
+    <span class="sec-head">Click here and we'll call you</span>
+    <p>Click the button below to get a phone call from an agent on a pre-authenticated line.</p>
+    <p><a href="#"><strong>[Contact Us Button]</strong></a></p>
+    <span class="sec-head">Prefer to call us directly?</span>
+    <p>Alternatively, call us at <strong>844-428-3060</strong> for assistance.</p>
+  </div>`;
+}
+
+// ── Asset manifest builder ───────────────────────────────────────
+function buildAssets(d) {
+  const assets = [];
+  const ingressLabels = { da: 'Direct Access', punchout: 'Punchout', uies: 'UIES + Sharable Link', 'punchout-sso': 'Punchout + SSO' };
+  const ingressLabel = ingressLabels[d.ingress] || d.ingress;
+
+  // Pre-launch
+  if (d.inclPrelaunch) {
+    assets.push({ id: 'prelaunch', phase: 'pre-launch', type: 'Email', role: 'All Users', title: 'Pre-Launch Announcement', subject: 'Coming Soon: Amazon Business for ' + d.company + (d.hasPrime ? ' with Business Prime' : ''), content: buildPrelaunch(d) });
+  }
+
+  // Approver emails (DA only)
+  if (d.inclApprover) {
+    assets.push({ id: 'approver-pre', phase: 'pre-launch', type: 'Email', role: 'Approvers', title: 'Approver Pre-Launch', subject: 'Coming Soon: Amazon Business for ' + d.company, content: buildApproverPrelaunch(d) });
+    assets.push({ id: 'approver-launch', phase: 'launch', type: 'Email', role: 'Approvers', title: 'Approver Launch', subject: 'Join the ' + d.company + ' Amazon Business account today', content: buildApproverLaunch(d) });
+    assets.push({ id: 'approver-followup', phase: 'follow-up', type: 'Email', role: 'Approvers', title: 'Approver Follow-Up', subject: 'ACTION REQUIRED: Join ' + d.company + ' Amazon Business account', content: buildApproverFollowup(d) });
+  }
+
+  // Admin emails (DA only)
+  if (d.inclAdmin) {
+    assets.push({ id: 'admin-pre', phase: 'pre-launch', type: 'Email', role: 'Administrators', title: 'Administrator Pre-Launch', subject: 'Coming Soon: Amazon Business for ' + d.company, content: buildAdminPrelaunch(d) });
+    assets.push({ id: 'admin-launch', phase: 'launch', type: 'Email', role: 'Administrators', title: 'Administrator Launch', subject: 'Join the ' + d.company + ' Amazon Business account today', content: buildAdminLaunch(d) });
+    assets.push({ id: 'admin-followup', phase: 'follow-up', type: 'Email', role: 'Administrators', title: 'Administrator Follow-Up', subject: 'ACTION REQUIRED: Complete registration', content: buildAdminFollowup(d) });
+  }
+
+  // End user launch emails by scenario
+  const scenarios = [];
+  if (d.scNew) scenarios.push({ key: 'new', label: 'New to Amazon' });
+  if (d.scExisting) scenarios.push({ key: 'existing', label: 'Existing Single User Account' });
+  if (d.scMultiUser) scenarios.push({ key: 'multiuser', label: 'Admin on Multi-User Outside Account' });
+
+  scenarios.forEach(sc => {
+    assets.push({
+      id: 'launch-' + sc.key,
+      phase: 'launch',
+      type: 'Email',
+      role: 'End Users',
+      title: 'Launch Email — ' + sc.label,
+      subject: 'Join the ' + d.company + ' Amazon Business account' + (d.hasPrime ? ' with Business Prime' : '') + ' today',
+      ingress: ingressLabel,
+      content: buildLaunchEmail(d, sc.key)
+    });
+  });
+
+  // Follow-up
+  if (d.inclFollowup) {
+    assets.push({ id: 'followup', phase: 'follow-up', type: 'Email', role: 'All Users', title: 'Follow-Up / ACTION REQUIRED', subject: 'ACTION REQUIRED: Registration support', content: buildFollowup(d) });
+  }
+
+  // Support response
+  if (d.inclSupport) {
+    assets.push({ id: 'support', phase: 'follow-up', type: 'Email', role: 'Support', title: 'Support Response Template', subject: 'Need Help Joining ' + d.company + ' Amazon Business Account?', content: buildSupportResponse(d) });
+  }
+
+  return assets;
+}
+
+// ── Timeline ─────────────────────────────────────────────────────
+function renderTimeline(d) {
+  const gl = d.goLive; if (!gl) return;
+  const today = new Date().toISOString().split('T')[0];
+  const dg = daysBetween(today, gl);
+  document.getElementById('stat-days').textContent = dg > 0 ? dg : 'Live!';
+  document.getElementById('tl-go-live').value = gl;
+  const ms = [
+    { d: addDays(gl, -21), t: 'Pre-Launch Announcement', desc: 'Send awareness email to all users introducing the Amazon Business partnership.', assets: ['Pre-Launch Email', 'Approver Pre-Launch (if applicable)', 'Admin Pre-Launch (if applicable)'], c: '' },
+    { d: addDays(gl, -14), t: 'Approver & Admin Setup', desc: 'Approvers and Administrators receive invitations and complete registration ahead of the general launch.', assets: ['Approver Launch Email', 'Admin Launch Email'], c: '' },
+    { d: addDays(gl, -7), t: 'Final Reminder', desc: 'Send a reminder to users who have not yet completed registration. Reiterate benefits and go-live date.', assets: ['Follow-Up / ACTION REQUIRED'], c: 'teal' },
+    { d: gl, t: 'Go-Live Day 🎉', desc: 'Official launch. All users receive the launch email and can begin purchasing.', assets: ['Launch Emails (all scenarios)', 'Approver/Admin Launch'], c: 'green' },
+    { d: addDays(gl, 3), t: 'Post-Launch Follow-Up', desc: 'Send follow-up to users who have not yet joined the account.', assets: ['Follow-Up / ACTION REQUIRED'], c: 'teal' },
+    { d: addDays(gl, 14), t: '2-Week Check-In', desc: 'Confirm all users have joined. Address outstanding support tickets.', assets: ['Support Response Template'], c: 'teal' }
+  ];
+  document.getElementById('timeline-container').innerHTML = ms.map(m =>
+    `<div class="tl-item"><div class="tl-dot ${m.c}"></div><div class="tl-content"><div class="tl-date">${shortDate(m.d)}</div><h4>${m.t}</h4><p>${m.desc}</p><div class="tl-tags">${m.assets.map(a => '<span class="tl-tag">' + a + '</span>').join('')}</div></div></div>`
+  ).join('');
+}
+
+// ── Catalog render ────────────────────────────────────────────────
+function renderCatalog() {
+  const d = getFormData();
+  // Replace {company} placeholder in migrationInfo
+  const assets = generatedAssets.map(a => ({ ...a, content: a.content.replace(/\$\{'{company}'\}/g, d.company) }));
+  const filtered = currentFilter === 'all' ? assets : assets.filter(a => a.phase === currentFilter);
+  document.getElementById('catalog').innerHTML = filtered.length === 0
+    ? '<p style="color:var(--ab-muted);text-align:center;padding:2rem">No templates match the selected filter.</p>'
+    : filtered.map(a => `
+    <div class="doc-card" id="card-${a.id}">
+      <div class="doc-bar">
+        <div>
+          <span class="pill-phase">${a.phase}</span>
+          <span class="pill-type">${a.type}</span>
+          <span class="pill-role">${a.role}</span>
+          <h3 style="display:inline">${a.title}</h3>
+          ${a.ingress ? '<span style="font-size:.7rem;color:var(--ab-muted);margin-left:.4rem">· ' + a.ingress + '</span>' : ''}
+        </div>
+        <div>
+          <button class="btn-edit-d" onclick="toggleEdit('${a.id}')">✎ Edit</button>
+          <button class="btn-dl-d" onclick="downloadDoc('${a.id}','${a.subject.replace(/'/g,"\\'")}')">⬇ Download</button>
+        </div>
+      </div>
+      <div style="font-size:.72rem;color:var(--ab-muted);padding:.4rem 1.2rem;background:var(--ab-light);border-bottom:1px solid var(--ab-border)">
+        <strong>Subject:</strong> ${a.subject}
+      </div>
+      <div class="doc-body" id="body-${a.id}">${a.content}</div>
+      <div class="doc-edit" id="edit-${a.id}">
+        <textarea id="ta-${a.id}"></textarea>
+        <div class="doc-edit-btns">
+          <button onclick="toggleEdit('${a.id}')" style="background:var(--ab-border)">Cancel</button>
+          <button onclick="applyEdit('${a.id}')" style="background:var(--ab-orange);color:#fff">Apply</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleEdit(id) {
+  const ed = document.getElementById('edit-' + id);
+  const ta = document.getElementById('ta-' + id);
+  const body = document.getElementById('body-' + id);
+  if (ed.classList.contains('open')) { ed.classList.remove('open'); }
+  else { ta.value = body.innerHTML; ed.classList.add('open'); }
+}
+function applyEdit(id) { document.getElementById('body-' + id).innerHTML = document.getElementById('ta-' + id).value; document.getElementById('edit-' + id).classList.remove('open'); }
+
+function downloadDoc(id, subject) {
+  const body = document.getElementById('body-' + id);
+  const blob = new Blob([`<html><head><meta charset="utf-8"><title>${subject}</title><style>
+    body{font-family:Arial,sans-serif;max-width:700px;margin:2rem auto;line-height:1.7;color:#232f3e}
+    ul,ol{margin:.5rem 0}li{margin-bottom:.4rem}
+    .doc-banner{background:#232f3e;padding:1.4rem 1.8rem;color:#fff;border-radius:4px 4px 0 0}
+    .doc-banner h2{font-size:1.1rem;margin:.3rem 0 0}
+    .doc-banner .cust-name{color:#FF6200;font-size:1.4rem;font-weight:700}
+    .doc-banner .ab-mark{font-size:.6rem;letter-spacing:2px;opacity:.7;text-transform:uppercase}
+    .doc-content{padding:1.5rem 2rem;border:1px solid #e3e6e8;border-top:none}
+    .sec-head{color:#FF6200;font-weight:700;font-size:.95rem;display:block;margin:1.2rem 0 .3rem}
+    .warn-box{background:#fff3ec;border-left:4px solid #FF6200;padding:.7rem 1rem;margin:1rem 0}
+    .legal-box{background:#fffbe6;border-left:4px solid #f0a500;padding:.7rem 1rem;margin:1rem 0}
+    .action-badge{background:#cc0c39;color:#fff;padding:.2rem .5rem;border-radius:4px;font-size:.72rem;font-weight:700}
+    .signoff{margin-top:1.2rem;padding-top:.8rem;border-top:1px solid #e3e6e8;font-size:.85rem}
+    a{color:#FF6200}
+    </style></head><body>${body.innerHTML}</body></html>`], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = id + '.html';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Generate ─────────────────────────────────────────────────────
+function generate() {
+  if (!ingressType) { alert('Please select an Ingress Type.'); return; }
+  const d = getFormData();
+  if (!document.getElementById('company-name').value.trim()) { alert('Please enter a Company Name.'); return; }
+  if (!d.goLive) { alert('Please select a Go-Live Date.'); return; }
+  if (!d.scNew && !d.scExisting && !d.scMultiUser) { alert('Please select at least one User Scenario.'); return; }
+
+  // Sync timeline date
+  document.getElementById('tl-go-live').value = d.goLive;
+
+  // Build assets
+  generatedAssets = buildAssets(d);
+
+  // Update stats
+  const ingressLabels = { da: 'DA', punchout: 'Punchout', uies: 'UIES', 'punchout-sso': 'PO+SSO' };
+  document.getElementById('stat-emails').textContent = generatedAssets.length;
+  document.getElementById('stat-scenarios').textContent = [d.scNew, d.scExisting, d.scMultiUser].filter(Boolean).length;
+  document.getElementById('stat-ingress').textContent = ingressLabels[ingressType] || ingressType;
+
+  // Render
+  renderTimeline(d);
+  renderCatalog();
+
+  // Switch to timeline tab
+  showSection('timeline', document.getElementById('tab-timeline'));
+}
+
+// ── URL param pre-population ──────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const p = new URLSearchParams(window.location.search);
+  const company = p.get('company');
+  const goLive = p.get('goLive');
+  const procurement = p.get('procurement');
+  const categories = p.get('categories');
+  const ingress = p.get('ingress'); // 'da','punchout','uies','punchout-sso'
+
+  if (company) document.getElementById('company-name').value = company;
+  if (goLive) document.getElementById('go-live-date').value = goLive;
+  if (procurement) document.getElementById('epro-system').value = procurement;
+  if (categories) document.getElementById('categories').value = categories;
+
+  if (ingress && document.getElementById('ic-' + ingress)) {
+    selectIngress(ingress, document.getElementById('ic-' + ingress));
+  }
+
+  if (company || goLive) {
+    const banner = document.getElementById('prefill-banner');
+    const parts = [];
+    if (company) parts.push('Company: ' + company);
+    if (goLive) parts.push('Go-Live: ' + goLive);
+    document.getElementById('prefill-msg').textContent = '✅ Pre-populated from Training Decks tab — ' + parts.join(' · ') + '. Review and generate when ready.';
+    banner.classList.add('visible');
+  }
+
+  if (p.get('autoGenerate') === 'true' && company && goLive && ingress) {
+    setTimeout(() => generate(), 300);
+  }
+});
 </script>
 </body>
 </html>
