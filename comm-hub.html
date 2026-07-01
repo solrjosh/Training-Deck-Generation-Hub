@@ -370,7 +370,13 @@ function signoff(d) { return '<div class="signoff">Thank you,<br><strong>' + d.p
 function primeSuffix(d) { return d.hasPrime ? ' with Business Prime' : ''; }
 
 function buildBanner(company, title, subtitle) {
-  return '<div class="doc-banner"><div class="ab-mark">AMAZON BUSINESS</div><h2>' + title + '</h2><div class="cust-name">' + company + '</div>' + (subtitle ? '<div class="sub">' + subtitle + '</div>' : '') + '</div>';
+  // Table layout ensures Word renders as one solid block with no inter-element gaps
+  return '<div class="doc-banner"><table><tr><td>' +
+    '<span class="ab-mark">AMAZON BUSINESS</span>' +
+    '<h2>' + title + '</h2>' +
+    '<div class="cust-name">' + company + '</div>' +
+    (subtitle ? '<div class="sub">' + subtitle + '</div>' : '') +
+    '</td></tr></table></div>';
 }
 
 function migrationInfo(d) {
@@ -523,7 +529,7 @@ function toggleDownloadMenu(id) {
   }, 10);
 }
 
-var DL_STYLES = 'body{font-family:Arial,sans-serif;max-width:680px;margin:2rem auto;line-height:1.7;color:#232f3e;background:#f5f7fa;padding:1rem}.email-wrapper{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e3e6e8;box-shadow:0 2px 8px rgba(0,0,0,.08)}ul,ol{margin:.5rem 0;padding-left:1.5rem}li{margin-bottom:.4rem}p{margin:.5rem 0}.doc-banner{background-color:#232f3e;padding:1.6rem 1.8rem 1.4rem;color:#fff;border-bottom:3px solid #FF6200}.doc-banner .ab-mark{font-size:.6rem;letter-spacing:2px;opacity:.7;text-transform:uppercase;display:block;color:#ccc;margin-bottom:.4rem;background-color:#232f3e}.doc-banner h2{font-size:1.05rem;margin:0 0 .5rem 0;color:#fff;font-weight:700;display:block;background-color:#232f3e}.doc-banner .cust-name{color:#FF6200;font-size:1.3rem;font-weight:700;display:block;margin:.2rem 0;background-color:#232f3e}.doc-banner .sub{font-size:.85rem;color:#ccc;margin-top:.3rem;display:block;background-color:#232f3e}.doc-content{padding:1.5rem 2rem}.sec-head{color:#FF6200;font-weight:700;font-size:.95rem;display:block;margin:1.2rem 0 .3rem}.warn-box{background:#fff3ec;border-left:4px solid #FF6200;padding:.7rem 1rem;margin:1rem 0;border-radius:0 4px 4px 0}.legal-box{background:#fffbe6;border-left:4px solid #f0a500;padding:.7rem 1rem;margin:1rem 0;border-radius:0 4px 4px 0}.action-badge{background:#cc0c39;color:#fff;padding:.2rem .5rem;border-radius:4px;font-size:.72rem;font-weight:700}.signoff{margin-top:1.2rem;padding-top:.8rem;border-top:1px solid #e3e6e8;font-size:.85rem}a{color:#FF6200}';
+var DL_STYLES = 'body{font-family:Arial,sans-serif;max-width:680px;margin:2rem auto;line-height:1.7;color:#232f3e;background:#f5f7fa;padding:1rem}.email-wrapper{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e3e6e8;box-shadow:0 2px 8px rgba(0,0,0,.08)}ul,ol{margin:.5rem 0;padding-left:1.5rem}li{margin-bottom:.4rem}p{margin:.5rem 0}.doc-banner{background-color:#232f3e;padding:0;color:#fff;border-bottom:3px solid #FF6200}.doc-banner table{width:100%;background-color:#232f3e;border-collapse:collapse}.doc-banner td{background-color:#232f3e;padding:0;margin:0;border:none;vertical-align:top}.doc-banner .ab-mark{font-size:.6rem;letter-spacing:2px;opacity:.7;text-transform:uppercase;color:#ccc;background-color:#232f3e;display:block;padding:1.4rem 1.8rem .1rem;margin:0}.doc-banner h2{font-size:1.05rem;margin:0;color:#fff;font-weight:700;background-color:#232f3e;padding:.2rem 1.8rem .3rem;display:block}.doc-banner .cust-name{color:#FF6200;font-size:1.3rem;font-weight:700;background-color:#232f3e;display:block;padding:.2rem 1.8rem .1rem;margin:0}.doc-banner .sub{font-size:.85rem;color:#ccc;background-color:#232f3e;display:block;padding:.1rem 1.8rem 1.4rem;margin:0}.doc-content{padding:1.5rem 2rem}.sec-head{color:#FF6200;font-weight:700;font-size:.95rem;display:block;margin:1.2rem 0 .3rem}.warn-box{background:#fff3ec;border-left:4px solid #FF6200;padding:.7rem 1rem;margin:1rem 0;border-radius:0 4px 4px 0}.legal-box{background:#fffbe6;border-left:4px solid #f0a500;padding:.7rem 1rem;margin:1rem 0;border-radius:0 4px 4px 0}.action-badge{background:#cc0c39;color:#fff;padding:.2rem .5rem;border-radius:4px;font-size:.72rem;font-weight:700}.signoff{margin-top:1.2rem;padding-top:.8rem;border-top:1px solid #e3e6e8;font-size:.85rem}a{color:#FF6200}';
 
 function downloadDoc(id, subject, format) {
   var body = document.getElementById('body-' + id);
