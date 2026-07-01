@@ -84,6 +84,8 @@ input:focus,select:focus{outline:none;border-color:var(--ab-orange);box-shadow:0
 .dl-menu button:first-child{border-radius:6px 6px 0 0}
 .dl-menu button:last-child{border-radius:0 0 6px 6px}
 .doc-body{padding:0;font-size:.88rem;line-height:1.8;max-height:500px;overflow-y:auto}
+.doc-body[contenteditable="true"]{cursor:text;outline:2px solid #FF6200;outline-offset:-2px;background:#fffdf9}
+.doc-body[contenteditable="true"] .doc-banner{pointer-events:none;opacity:.9}/* banner not editable */
 .doc-banner{background:var(--ab-gradient);padding:1.4rem 1.8rem;color:#fff}
 .doc-banner .ab-mark{font-size:.6rem;letter-spacing:2px;opacity:.7;text-transform:uppercase;display:block}
 .doc-banner h2{font-size:1.1rem;margin:.3rem 0 0;color:#fff}
@@ -511,12 +513,35 @@ function renderCatalog() {
   var filtered = currentFilter === 'all' ? generatedAssets : generatedAssets.filter(function(a) { return a.phase === currentFilter; });
   document.getElementById('catalog').innerHTML = filtered.length === 0 ? '<p style="color:var(--ab-muted);text-align:center;padding:2rem">No templates match the selected filter.</p>' :
     filtered.map(function(a) {
-      return '<div class="doc-card" id="card-' + a.id + '"><div class="doc-bar"><div><span class="pill-phase">' + a.phase + '</span><span class="pill-type">' + a.type + '</span><span class="pill-role">' + a.role + '</span><h3 style="display:inline">' + a.title + '</h3>' + (a.ingress ? '<span style="font-size:.7rem;color:var(--ab-muted);margin-left:.4rem">&middot; ' + a.ingress + '</span>' : '') + '</div><div><button class="btn-edit-d" onclick="toggleEdit(\'' + a.id + '\')">&#9998; Edit</button><div class="dl-wrap"><button class="btn-dl-d" id="dl-btn-' + a.id + '" onclick="toggleDownloadMenu(\'' + a.id + '\')">&#11015; Download &#9662;</button><div class="dl-menu" id="dl-menu-' + a.id + '"><button onclick="downloadDoc(\'' + a.id + '\',\'' + a.subject.replace(/'/g, "\\'") + '\',\'html\');document.getElementById(\'dl-menu-' + a.id + '\').classList.remove(\'open\')">&#128196; HTML file</button><button onclick="downloadDoc(\'' + a.id + '\',\'' + a.subject.replace(/'/g, "\\'") + '\',\'word\');document.getElementById(\'dl-menu-' + a.id + '\').classList.remove(\'open\')">&#128221; Word (.doc)</button></div></div></div></div><div style="font-size:.72rem;color:var(--ab-muted);padding:.4rem 1.2rem;background:var(--ab-light);border-bottom:1px solid var(--ab-border)"><strong>Subject:</strong> ' + a.subject + '</div><div class="doc-body" id="body-' + a.id + '">' + a.content + '</div><div class="doc-edit" id="edit-' + a.id + '"><textarea id="ta-' + a.id + '"></textarea><div class="doc-edit-btns"><button onclick="toggleEdit(\'' + a.id + '\')" style="background:var(--ab-border)">Cancel</button><button onclick="applyEdit(\'' + a.id + '\')" style="background:var(--ab-orange);color:#fff">Apply</button></div></div></div>';
+      return '<div class="doc-card" id="card-' + a.id + '"><div class="doc-bar"><div><span class="pill-phase">' + a.phase + '</span><span class="pill-type">' + a.type + '</span><span class="pill-role">' + a.role + '</span><h3 style="display:inline">' + a.title + '</h3>' + (a.ingress ? '<span style="font-size:.7rem;color:var(--ab-muted);margin-left:.4rem">&middot; ' + a.ingress + '</span>' : '') + '</div><div><button class="btn-edit-d" onclick="toggleEdit(\'' + a.id + '\')">&#9998; Edit</button><div class="dl-wrap"><button class="btn-dl-d" id="dl-btn-' + a.id + '" onclick="toggleDownloadMenu(\'' + a.id + '\')">&#11015; Download &#9662;</button><div class="dl-menu" id="dl-menu-' + a.id + '"><button onclick="downloadDoc(\'' + a.id + '\',\'' + a.subject.replace(/'/g, "\\'") + '\',\'html\');document.getElementById(\'dl-menu-' + a.id + '\').classList.remove(\'open\')">&#128196; HTML file</button><button onclick="downloadDoc(\'' + a.id + '\',\'' + a.subject.replace(/'/g, "\\'") + '\',\'word\');document.getElementById(\'dl-menu-' + a.id + '\').classList.remove(\'open\')">&#128221; Word (.doc)</button></div></div></div></div><div style="font-size:.72rem;color:var(--ab-muted);padding:.4rem 1.2rem;background:var(--ab-light);border-bottom:1px solid var(--ab-border)"><strong>Subject:</strong> ' + a.subject + '</div><div class="doc-body" id="body-' + a.id + '">' + a.content + '</div></div></div>';
     }).join('');
 }
 
-function toggleEdit(id) { var ed = document.getElementById('edit-' + id); var ta = document.getElementById('ta-' + id); var body = document.getElementById('body-' + id); if (ed.classList.contains('open')) { ed.classList.remove('open'); } else { ta.value = body.innerHTML; ed.classList.add('open'); } }
-function applyEdit(id) { document.getElementById('body-' + id).innerHTML = document.getElementById('ta-' + id).value; document.getElementById('edit-' + id).classList.remove('open'); }
+function toggleEdit(id) {
+  var body = document.getElementById('body-' + id);
+  var btn = document.querySelector('#card-' + id + ' .btn-edit-d');
+  var isEditing = body.getAttribute('contenteditable') === 'true';
+  if (isEditing) {
+    // Exit edit mode
+    body.removeAttribute('contenteditable');
+    body.style.outline = '';
+    body.style.cursor = '';
+    body.style.background = '';
+    btn.textContent = '\u270E Edit';
+    btn.style.background = '';
+  } else {
+    // Enter edit mode
+    body.setAttribute('contenteditable', 'true');
+    body.style.outline = '2px solid #FF6200';
+    body.style.outlineOffset = '-2px';
+    body.style.cursor = 'text';
+    body.style.background = '#fffdf9';
+    btn.textContent = '\u2713 Done';
+    btn.style.background = 'rgba(6,125,98,.15)';
+    btn.style.color = '#067d62';
+    body.focus();
+  }
+}
 
 function toggleDownloadMenu(id) {
   var menu = document.getElementById('dl-menu-' + id);
