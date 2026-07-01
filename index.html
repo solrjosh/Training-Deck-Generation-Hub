@@ -874,7 +874,7 @@
           <button type="button" class="btn btn-primary" onclick="openCommHub()" style="background:#ff9900;color:#232f3e;">
             📣 Open Communication Planning Hub →
           </button>
-          <span style="font-size:.8rem;color:#565959;margin-left:12px;">Opens in a new tab with customer details pre-populated.</span>
+          <span style="font-size:.8rem;color:#565959;margin-left:12px;">Switches to the Launch Communications tab with details pre-populated.</span>
         </div>
       </div>
     </section>
@@ -1039,11 +1039,17 @@
     if (procurement) document.getElementById('ch-procurement-system').value = procurement;
 
     // Set tone
-    chTone = tone;
+    const selectedToneCard = document.querySelector('.ch-tone-card.selected');
+    const toneIdx = selectedToneCard ? [...document.querySelectorAll('.ch-tone-card')].indexOf(selectedToneCard) : 1;
+    const toneMap = ['formal','balanced','casual'];
+    const resolvedTone = toneMap[toneIdx] || 'balanced';
     document.querySelectorAll('.ch-tone-card').forEach((c, i) => {
       c.classList.remove('selected');
       if ((i === 0 && tone === 'formal') || (i === 1 && tone === 'balanced') || (i === 2 && tone === 'casual')) c.classList.add('selected');
     });
+    // Also tell the IIFE what tone is selected via a DOM-readable attribute
+    document.getElementById('comm-hub-pane').setAttribute('data-ch-tone', tone);
+    if (window.chTone !== undefined) window.chTone = tone;
 
     // Show pre-fill banner
     if (company || categoriesRaw) {
@@ -2374,8 +2380,9 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
   <script>
   (function(){
     var chTone='balanced', chFilter='all';
+    window.chTone = chTone; // expose for outer scope
     window.chShowSection=function(id,el){document.querySelectorAll('.ch-section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('.ch-tab').forEach(function(t){t.classList.remove('active');});el.classList.add('active');};
-    window.chSelectTone=function(t,el){chTone=t;document.querySelectorAll('.ch-tone-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');};
+    window.chSelectTone=function(t,el){chTone=t;window.chTone=t;document.querySelectorAll('.ch-tone-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');};
     window.chSetFilter=function(f,el){chFilter=f;document.querySelectorAll('.ch-pill').forEach(function(p){p.classList.remove('active');});el.classList.add('active');chRenderCatalog();};
     window.chGetCategories=function(){var cats=[];if(document.getElementById('ch-cat-office').checked)cats.push('Office');if(document.getElementById('ch-cat-breakroom').checked)cats.push('Breakroom');if(document.getElementById('ch-cat-it').checked)cats.push('IT');if(document.getElementById('ch-cat-mro').checked)cats.push('MRO');if(document.getElementById('ch-cat-tailspend').checked)cats.push('Tail Spend');if(document.getElementById('ch-cat-other').checked){var v=document.getElementById('ch-cat-other-text').value.trim();cats.push(v||'Other');}return cats;};
     function chGetData(){return{company:document.getElementById('ch-company-name').value.trim()||'[Company]',goLive:document.getElementById('ch-tl-go-live').value||document.getElementById('ch-go-live-date').value,procurement:document.getElementById('ch-procurement-system').value.trim(),contactName:document.getElementById('ch-contact-name').value.trim(),contactEmail:document.getElementById('ch-contact-email').value.trim(),categories:chGetCategories(),tone:chTone};}
