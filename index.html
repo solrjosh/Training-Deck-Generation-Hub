@@ -123,6 +123,99 @@
     /* Deck-visibility filtering */
     .deck-filtered { display: none !important; }
   </style>
+
+  <!-- ── Tab bar styles ── -->
+  <style>
+    .hub-tab-bar { background: #fff; border-bottom: 2px solid var(--color-border); padding: 0 32px; display: flex; gap: 0; }
+    .hub-tab { padding: 12px 24px; font-size: 0.875rem; font-weight: 700; color: var(--color-text-muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; background: none; border-top: none; border-left: none; border-right: none; transition: all 0.15s; font-family: var(--font); }
+    .hub-tab:hover { color: var(--color-orange); }
+    .hub-tab.active { color: var(--color-orange); border-bottom-color: var(--color-orange); }
+    .hub-tab-pane { display: none; }
+    .hub-tab-pane.active { display: block; }
+
+    /* ── Comm Hub embedded styles (namespaced to #comm-hub-pane) ── */
+    #comm-hub-pane { font-family: 'Amazon Ember', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    #comm-hub-pane .ch-nav { background: #fff; border-bottom: 2px solid #e3e6e8; padding: 0 2rem; display: flex; gap: 0; }
+    #comm-hub-pane .ch-tab { padding: .8rem 1.5rem; font-size: .85rem; font-weight: 600; color: #6c757d; cursor: pointer; border-bottom: 3px solid transparent; background: none; border-top: none; border-left: none; border-right: none; transition: all .2s; font-family: inherit; }
+    #comm-hub-pane .ch-tab:hover { color: #ff9900; }
+    #comm-hub-pane .ch-tab.active { color: #ff9900; border-bottom-color: #ff9900; }
+    #comm-hub-pane .ch-section { display: none; padding: 2rem; }
+    #comm-hub-pane .ch-section.active { display: block; }
+    #comm-hub-pane .ch-container { max-width: 960px; margin: 0 auto; }
+    #comm-hub-pane .ch-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(35,47,62,.1); padding: 2rem; margin-bottom: 1.5rem; border: 1px solid #e3e6e8; }
+    #comm-hub-pane .ch-card h2 { font-size: 1.3rem; margin-bottom: .2rem; color: #232f3e; display: flex; align-items: center; gap: .5rem; }
+    #comm-hub-pane .ch-card .subtitle { color: #6c757d; margin-bottom: 1.5rem; font-size: .88rem; }
+    #comm-hub-pane .ch-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    #comm-hub-pane .ch-form-group { margin-bottom: 1rem; }
+    #comm-hub-pane .ch-form-group label { display: block; font-weight: 600; margin-bottom: .3rem; font-size: .85rem; color: #232f3e; }
+    #comm-hub-pane .ch-form-group .hint { font-size: .75rem; color: #6c757d; margin-bottom: .3rem; }
+    #comm-hub-pane .ch-form-group input[type="text"],#comm-hub-pane .ch-form-group input[type="email"],#comm-hub-pane .ch-form-group input[type="date"] { width: 100%; padding: .65rem .9rem; border: 1.5px solid #e3e6e8; border-radius: 8px; font-size: .9rem; font-family: inherit; }
+    #comm-hub-pane .ch-tone-selector { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .8rem; margin-top: .4rem; }
+    #comm-hub-pane .ch-tone-card { border: 2px solid #e3e6e8; border-radius: 10px; padding: 1rem; cursor: pointer; text-align: center; transition: all .2s; background: #fff; }
+    #comm-hub-pane .ch-tone-card:hover { border-color: #ff9900; transform: translateY(-1px); }
+    #comm-hub-pane .ch-tone-card.selected { border-color: #ff9900; background: rgba(255,153,0,.04); box-shadow: 0 0 0 3px rgba(255,153,0,.1); }
+    #comm-hub-pane .ch-tone-card h4 { font-size: .82rem; color: #232f3e; margin-bottom: .2rem; }
+    #comm-hub-pane .ch-tone-card p { font-size: .7rem; color: #6c757d; line-height: 1.3; }
+    #comm-hub-pane .ch-tone-card .tone-icon { font-size: 1.5rem; margin-bottom: .4rem; }
+    #comm-hub-pane .ch-btn { padding: .7rem 2rem; border: none; border-radius: 8px; font-size: .95rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; background: #ff9900; color: #fff; }
+    #comm-hub-pane .ch-btn:hover { background: #ec7211; }
+    #comm-hub-pane .ch-btn-row { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
+    #comm-hub-pane .ch-prefill-banner { background: #e8f4fd; border: 1px solid #a8d5f0; border-radius: 10px; padding: .8rem 1.2rem; margin-bottom: 1rem; font-size: .85rem; color: #0a5c8a; display: none; align-items: center; gap: .6rem; }
+    #comm-hub-pane .ch-prefill-banner.visible { display: flex; }
+    #comm-hub-pane .ch-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    #comm-hub-pane .ch-stat { background: #fff; border-radius: 10px; padding: 1rem; text-align: center; border: 1px solid #e3e6e8; }
+    #comm-hub-pane .ch-stat .num { font-size: 1.4rem; font-weight: 700; color: #232f3e; }
+    #comm-hub-pane .ch-stat .lbl { font-size: .7rem; color: #6c757d; text-transform: uppercase; }
+    #comm-hub-pane .ch-timeline { position: relative; padding: 1rem 0; }
+    #comm-hub-pane .ch-timeline::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom,#ff9900,#00a4b4,#067d62); border-radius: 3px; }
+    #comm-hub-pane .ch-tl-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    #comm-hub-pane .ch-tl-dot { width: 12px; height: 12px; border-radius: 50%; background: #ff9900; border: 3px solid #fff; box-shadow: 0 0 0 3px #ff9900; margin-top: .4rem; flex-shrink: 0; position: relative; left: 19px; z-index: 1; }
+    #comm-hub-pane .ch-tl-dot.teal { background: #00a4b4; box-shadow: 0 0 0 3px #00a4b4; }
+    #comm-hub-pane .ch-tl-dot.green { background: #067d62; box-shadow: 0 0 0 3px #067d62; }
+    #comm-hub-pane .ch-tl-content { background: #fff; border: 1px solid #e3e6e8; border-radius: 10px; padding: 1rem 1.2rem; flex: 1; margin-left: 1rem; }
+    #comm-hub-pane .ch-tl-date { font-size: .72rem; color: #ff9900; font-weight: 600; margin-bottom: .3rem; }
+    #comm-hub-pane .ch-tl-content h4 { font-size: .88rem; color: #232f3e; margin-bottom: .2rem; }
+    #comm-hub-pane .ch-tl-content p { font-size: .8rem; color: #6c757d; }
+    #comm-hub-pane .ch-tl-tags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .4rem; }
+    #comm-hub-pane .ch-tl-tag { background: rgba(255,153,0,.1); color: #ec7211; padding: .15rem .5rem; border-radius: 12px; font-size: .65rem; font-weight: 600; }
+    #comm-hub-pane .ch-filter-bar { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem; }
+    #comm-hub-pane .ch-pill { padding: .5rem 1.2rem; border: 1.5px solid #e3e6e8; border-radius: 20px; background: #fff; cursor: pointer; font-size: .8rem; font-weight: 500; }
+    #comm-hub-pane .ch-pill.active, #comm-hub-pane .ch-pill:hover { border-color: #ff9900; background: rgba(255,153,0,.06); color: #ec7211; }
+    #comm-hub-pane .ch-doc-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(35,47,62,.1); margin-bottom: 1.5rem; overflow: hidden; border: 1px solid #e3e6e8; }
+    #comm-hub-pane .ch-doc-bar { display: flex; align-items: center; justify-content: space-between; padding: .7rem 1.2rem; background: #f5f7fa; border-bottom: 1px solid #e3e6e8; }
+    #comm-hub-pane .ch-doc-bar h3 { font-size: .85rem; color: #232f3e; }
+    #comm-hub-pane .ch-pill-phase { background: #232f3e; color: #fff; padding: .15rem .5rem; border-radius: 10px; font-size: .65rem; margin-right: .4rem; }
+    #comm-hub-pane .ch-pill-type { background: #067d62; color: #fff; padding: .15rem .45rem; border-radius: 10px; font-size: .62rem; margin-right: .3rem; }
+    #comm-hub-pane .ch-doc-bar button { padding: .35rem .8rem; border: none; border-radius: 6px; font-size: .72rem; font-weight: 600; cursor: pointer; margin-left: .3rem; }
+    #comm-hub-pane .ch-btn-edit { background: rgba(255,153,0,.12); color: #ec7211; }
+    #comm-hub-pane .ch-btn-dl { background: #232f3e; color: #fff; }
+    #comm-hub-pane .ch-doc-body { padding: 0; font-size: .88rem; line-height: 1.8; max-height: 500px; overflow-y: auto; }
+    #comm-hub-pane .ch-doc-banner { background: linear-gradient(135deg,#232f3e 0%,#37475a 100%); padding: 1.4rem 1.8rem; color: #fff; }
+    #comm-hub-pane .ch-doc-banner .ab-mark { font-size: .6rem; letter-spacing: 2px; opacity: .7; text-transform: uppercase; }
+    #comm-hub-pane .ch-doc-banner h2 { font-size: 1.1rem; margin: .3rem 0 0; color: #fff; }
+    #comm-hub-pane .ch-doc-banner .cust-name { color: #ff9900; font-size: 1.4rem; font-weight: 700; }
+    #comm-hub-pane .ch-doc-content { padding: 1.5rem 2rem; }
+    #comm-hub-pane .ch-doc-content .sec-head { color: #ff9900; font-weight: 700; font-size: .95rem; margin: 1.2rem 0 .3rem; display: block; }
+    #comm-hub-pane .ch-doc-content ul { padding-left: 1.3rem; margin: .4rem 0; }
+    #comm-hub-pane .ch-doc-content li { margin-bottom: .4rem; }
+    #comm-hub-pane .ch-doc-content .badge-row { display: flex; gap: .5rem; align-items: center; margin: .6rem 0; }
+    #comm-hub-pane .ch-doc-content .badge-pill { display: inline-flex; align-items: center; gap: .3rem; padding: .25rem .6rem; border-radius: 6px; font-size: .72rem; font-weight: 700; }
+    #comm-hub-pane .ch-doc-content .badge-purple { background: #6f42c1; color: #fff; }
+    #comm-hub-pane .ch-doc-content .badge-green { background: #067d62; color: #fff; }
+    #comm-hub-pane .ch-doc-content .cta-box { background: #fff8e1; border-left: 4px solid #ff9900; padding: .7rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: .85rem; }
+    #comm-hub-pane .ch-doc-content .warning-box { background: #fff3f3; border-left: 4px solid #dc3545; padding: .7rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: .82rem; color: #842029; }
+    #comm-hub-pane .ch-doc-content p { margin: .4rem 0; }
+    #comm-hub-pane .ch-doc-content .signoff { margin-top: 1.2rem; padding-top: .8rem; border-top: 1px solid #e3e6e8; font-size: .85rem; }
+    #comm-hub-pane .ch-doc-edit { display: none; padding: 1rem 1.5rem; border-top: 1px solid #e3e6e8; background: #f5f7fa; }
+    #comm-hub-pane .ch-doc-edit.open { display: block; }
+    #comm-hub-pane .ch-doc-edit textarea { width: 100%; min-height: 200px; padding: .8rem; border: 1.5px solid #e3e6e8; border-radius: 8px; font-family: 'Courier New',monospace; font-size: .8rem; }
+    #comm-hub-pane .ch-tl-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: .5rem; }
+    #comm-hub-pane .ch-tl-header input[type="date"] { padding: .4rem .6rem; border: 1.5px solid #e3e6e8; border-radius: 6px; font-size: .82rem; }
+    #comm-hub-pane .ch-hero { background: linear-gradient(135deg,#232f3e 0%,#37475a 100%); border-radius: 14px; padding: 2rem 2.5rem; margin-bottom: 1.5rem; color: #fff; }
+    #comm-hub-pane .ch-hero h2 { font-size: 1.5rem; margin-bottom: .4rem; }
+    #comm-hub-pane .ch-hero p { opacity: .85; font-size: .9rem; }
+    @media(max-width:700px){#comm-hub-pane .ch-form-row,#comm-hub-pane .ch-tone-selector,#comm-hub-pane .ch-stats{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
   <header class="hub-header" role="banner">
@@ -133,6 +226,14 @@
     </div>
   </header>
 
+  <!-- ── Top-level tab bar ── -->
+  <div class="hub-tab-bar" role="tablist">
+    <button class="hub-tab active" role="tab" aria-selected="true" aria-controls="pane-decks" id="tab-decks" onclick="switchHubTab('decks',this)">📊 Training Decks</button>
+    <button class="hub-tab" role="tab" aria-selected="false" aria-controls="pane-comms" id="tab-comms" onclick="switchHubTab('comms',this)">📣 Launch Communications</button>
+  </div>
+
+  <!-- ── Training Decks pane ── -->
+  <div class="hub-tab-pane active" id="pane-decks" role="tabpanel" aria-labelledby="tab-decks">
   <main class="hub-main" id="main-content">
     <div class="restore-banner" id="restore-banner" role="status" aria-live="polite">Form restored from your last session.</div>
 
@@ -802,9 +903,111 @@
       </div>
     </section>
   </main>
+  </div><!-- end #pane-decks -->
+
+  <!-- ── Launch Communications pane ── -->
+  <div class="hub-tab-pane" id="pane-comms" role="tabpanel" aria-labelledby="tab-comms">
+
+    <!-- Comm Hub inner nav -->
+    <div class="ch-nav">
+      <button class="ch-tab active" onclick="chShowSection('ch-setup',this)">⚙ Setup</button>
+      <button class="ch-tab" onclick="chShowSection('ch-timeline',this)" id="ch-tab-timeline">📅 Communication Plan</button>
+      <button class="ch-tab" onclick="chShowSection('ch-catalog',this)" id="ch-tab-catalog">📄 Assets</button>
+    </div>
+
+    <div id="comm-hub-pane">
+
+      <!-- SETUP -->
+      <div class="ch-section active" id="ch-setup"><div class="ch-container">
+        <div class="ch-prefill-banner" id="ch-prefill-banner"><span>✅</span><span id="ch-prefill-msg">Customer details pre-populated from Training Decks tab.</span></div>
+        <div class="ch-hero"><h2>Build Your Communication Plan</h2><p>Customer details are pulled from the Training Decks tab. Review, adjust tone, and generate.</p></div>
+        <div class="ch-card">
+          <h2>📝 Customer Details</h2><p class="subtitle">Pre-populated from the Training Decks tab. Edit if needed.</p>
+          <div class="ch-form-row">
+            <div class="ch-form-group"><label>Company Name *</label><input type="text" id="ch-company-name" placeholder=""></div>
+            <div class="ch-form-group"><label>Category Endorsement *</label>
+              <div class="hint">What category are they endorsing AB for?</div>
+              <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.4rem">
+                <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="ch-cat-office"> Office</label>
+                <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="ch-cat-breakroom"> Breakroom</label>
+                <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="ch-cat-it"> IT</label>
+                <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="ch-cat-mro"> MRO</label>
+                <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="ch-cat-tailspend"> Tail Spend</label>
+                <label style="font-weight:normal;display:flex;align-items:center;gap:.3rem;font-size:.85rem"><input type="checkbox" id="ch-cat-other" onchange="document.getElementById('ch-cat-other-text').style.display=this.checked?'block':'none'"> Other</label>
+              </div>
+              <input type="text" id="ch-cat-other-text" placeholder="Specify other category" style="display:none;margin-top:.5rem;width:100%;padding:.5rem .8rem;border:1.5px solid #e3e6e8;border-radius:8px;font-size:.85rem">
+            </div>
+          </div>
+          <div class="ch-form-row">
+            <div class="ch-form-group"><label>Go-Live Date *</label><input type="date" id="ch-go-live-date"></div>
+            <div class="ch-form-group"><label>Procurement System <span style="font-weight:normal;color:#6c757d">(if any)</span></label><input type="text" id="ch-procurement-system" placeholder="e.g. Oracle, Ariba, Coupa"></div>
+          </div>
+          <div class="ch-form-row">
+            <div class="ch-form-group"><label>POC Name</label><input type="text" id="ch-contact-name" placeholder=""></div>
+            <div class="ch-form-group"><label>POC Email</label><input type="text" id="ch-contact-email" placeholder=""></div>
+          </div>
+        </div>
+        <div class="ch-card">
+          <h2>🎨 Communication Style</h2><p class="subtitle">Shapes the tone of all generated content.</p>
+          <div class="ch-tone-selector">
+            <div class="ch-tone-card" onclick="chSelectTone('formal',this)"><div class="tone-icon">📜</div><h4>Formal &amp; Policy-Focused</h4><p>Professional, directive. Emphasizes compliance.</p></div>
+            <div class="ch-tone-card selected" onclick="chSelectTone('balanced',this)"><div class="tone-icon">📣</div><h4>General Awareness</h4><p>Clear, professional. Balanced tone for most orgs.</p></div>
+            <div class="ch-tone-card" onclick="chSelectTone('casual',this)"><div class="tone-icon">🎉</div><h4>Casual &amp; Engaging</h4><p>Friendly, energetic. Modern workplace cultures.</p></div>
+          </div>
+        </div>
+        <div class="ch-btn-row"><button class="ch-btn" onclick="chGenerate()">Generate Plan &amp; Assets →</button></div>
+      </div></div>
+
+      <!-- TIMELINE -->
+      <div class="ch-section" id="ch-timeline"><div class="ch-container">
+        <div class="ch-stats">
+          <div class="ch-stat"><div style="font-size:1.5rem">📅</div><div class="num" id="ch-stat-days">--</div><div class="lbl">Days to Go-Live</div></div>
+          <div class="ch-stat"><div style="font-size:1.5rem">📧</div><div class="num">4</div><div class="lbl">Email Touches</div></div>
+          <div class="ch-stat"><div style="font-size:1.5rem">📄</div><div class="num">7</div><div class="lbl">Total Assets</div></div>
+          <div class="ch-stat"><div style="font-size:1.5rem">✅</div><div class="num">3</div><div class="lbl">Phases</div></div>
+        </div>
+        <div class="ch-card">
+          <div class="ch-tl-header">
+            <h2>📅 Communication Timeline</h2>
+            <div style="display:flex;align-items:center;gap:.5rem">
+              <label style="font-size:.82rem;font-weight:600;color:#232f3e">Go-Live Date:</label>
+              <input type="date" id="ch-tl-go-live" onchange="chUpdateDate()">
+            </div>
+          </div>
+          <p class="subtitle">Adjust the go-live date to recalculate milestone dates automatically.</p>
+          <div class="ch-timeline" id="ch-timeline-container"></div>
+        </div>
+      </div></div>
+
+      <!-- CATALOG -->
+      <div class="ch-section" id="ch-catalog"><div class="ch-container">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <h2 style="color:#232f3e;display:flex;align-items:center;gap:.5rem">📄 Communication Assets</h2>
+          <button class="ch-btn" style="font-size:.8rem;padding:.5rem 1rem;background:#232f3e" onclick="chShowSection('ch-setup',document.querySelector('.ch-tab'))">✎ Edit Setup</button>
+        </div>
+        <div class="ch-filter-bar">
+          <button class="ch-pill active" onclick="chSetFilter('all',this)">All</button>
+          <button class="ch-pill" onclick="chSetFilter('pre-launch',this)">Pre-Launch</button>
+          <button class="ch-pill" onclick="chSetFilter('launch',this)">Go-Live</button>
+          <button class="ch-pill" onclick="chSetFilter('post-launch',this)">Post-Launch</button>
+        </div>
+        <div id="ch-catalog"></div>
+      </div></div>
+
+    </div><!-- end #comm-hub-pane -->
+  </div><!-- end #pane-comms -->
 
   <script>
   'use strict';
+
+  // ── Hub tab switcher ──────────────────────────────────────────────
+  function switchHubTab(id, el) {
+    document.querySelectorAll('.hub-tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.hub-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    document.getElementById('pane-' + id).classList.add('active');
+    el.classList.add('active');
+    el.setAttribute('aria-selected','true');
+  }
 
   // ── Launch Communications integration ─────────────────────────────
   function openCommHub() {
@@ -812,40 +1015,55 @@
     const company = (document.getElementById('customer-name')?.value || '').trim();
     const categoriesRaw = (document.getElementById('categories-in-scope')?.value || '').trim();
     const tone = document.getElementById('comm-tone')?.value || 'balanced';
-
-    // Go-live date: use comm-specific date if set, otherwise fall back to training deck dates
     let goLive = document.getElementById('comm-go-live')?.value || '';
 
-    // Normalise categories from free-text to the comm hub's known values
-    // The training deck uses free-text like "Office Supplies, IT Equipment"
-    // The comm hub uses checkboxes: Office, Breakroom, IT, MRO, Tail Spend
-    const catLower = categoriesRaw.toLowerCase();
-    const mappedCats = [];
-    if (catLower.includes('office')) mappedCats.push('Office');
-    if (catLower.includes('breakroom') || catLower.includes('break room')) mappedCats.push('Breakroom');
-    if (catLower.includes('it') || catLower.includes('tech') || catLower.includes('computer')) mappedCats.push('IT');
-    if (catLower.includes('mro') || catLower.includes('maintenance') || catLower.includes('repair')) mappedCats.push('MRO');
-    if (catLower.includes('tail') || catLower.includes('indirect')) mappedCats.push('Tail Spend');
-    // If no match, pass the raw value as-is so comm hub can display it
-    const categories = mappedCats.length > 0 ? mappedCats.join(',') : categoriesRaw;
+    // Populate the comm hub fields
+    if (company) document.getElementById('ch-company-name').value = company;
+    if (goLive) {
+      document.getElementById('ch-go-live-date').value = goLive;
+      document.getElementById('ch-tl-go-live').value = goLive;
+    }
 
-    // Get eProcurement system from the punchout section if filled
+    // Map categories from free text to checkboxes
+    const catLower = categoriesRaw.toLowerCase();
+    if (catLower.includes('office')) document.getElementById('ch-cat-office').checked = true;
+    if (catLower.includes('breakroom') || catLower.includes('break room')) document.getElementById('ch-cat-breakroom').checked = true;
+    if (catLower.includes('it') || catLower.includes('tech') || catLower.includes('computer')) document.getElementById('ch-cat-it').checked = true;
+    if (catLower.includes('mro') || catLower.includes('maintenance')) document.getElementById('ch-cat-mro').checked = true;
+    if (catLower.includes('tail') || catLower.includes('indirect')) document.getElementById('ch-cat-tailspend').checked = true;
+
+    // Set procurement system from ePro selection
     const epro = document.getElementById('epro-system')?.value || '';
     const eproCustom = document.getElementById('epro-custom-name')?.value || '';
-    const procurement = eproCustom || (epro !== '' ? epro : '');
+    const procurement = eproCustom || (epro && epro !== '' ? epro : '');
+    if (procurement) document.getElementById('ch-procurement-system').value = procurement;
 
-    // Build the URL params
-    const params = new URLSearchParams();
-    if (company) params.set('company', company);
-    if (categories) params.set('categories', categories);
-    if (goLive) params.set('goLive', goLive);
-    if (procurement) params.set('procurement', procurement);
-    if (tone) params.set('tone', tone);
+    // Set tone
+    chTone = tone;
+    document.querySelectorAll('.ch-tone-card').forEach((c, i) => {
+      c.classList.remove('selected');
+      if ((i === 0 && tone === 'formal') || (i === 1 && tone === 'balanced') || (i === 2 && tone === 'casual')) c.classList.add('selected');
+    });
+
+    // Show pre-fill banner
+    if (company || categoriesRaw) {
+      const banner = document.getElementById('ch-prefill-banner');
+      const parts = [];
+      if (company) parts.push('Company: ' + company);
+      if (categoriesRaw) parts.push('Categories: ' + categoriesRaw);
+      if (goLive) parts.push('Go-Live: ' + goLive);
+      document.getElementById('ch-prefill-msg').textContent = '✅ Pre-populated from Training Decks tab — ' + parts.join(' · ');
+      banner.classList.add('visible');
+    }
+
     // Auto-generate if we have enough data
-    if (company && categories) params.set('autoGenerate', 'true');
+    if (company && goLive && chGetCategories().length > 0) {
+      setTimeout(() => chGenerate(), 200);
+    }
 
-    const commHubUrl = 'comm-hub.html?' + params.toString();
-    window.open(commHubUrl, '_blank');
+    // Switch to the communications tab
+    switchHubTab('comms', document.getElementById('tab-comms'));
+    window.scrollTo(0, 0);
   }
 
 
@@ -2151,5 +2369,45 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
     });
   });
   </script>
+
+  <!-- ── Comm Hub JS (namespaced with ch prefix) ── -->
+  <script>
+  (function(){
+    var chTone='balanced', chFilter='all';
+    window.chShowSection=function(id,el){document.querySelectorAll('.ch-section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('.ch-tab').forEach(function(t){t.classList.remove('active');});el.classList.add('active');};
+    window.chSelectTone=function(t,el){chTone=t;document.querySelectorAll('.ch-tone-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');};
+    window.chSetFilter=function(f,el){chFilter=f;document.querySelectorAll('.ch-pill').forEach(function(p){p.classList.remove('active');});el.classList.add('active');chRenderCatalog();};
+    window.chGetCategories=function(){var cats=[];if(document.getElementById('ch-cat-office').checked)cats.push('Office');if(document.getElementById('ch-cat-breakroom').checked)cats.push('Breakroom');if(document.getElementById('ch-cat-it').checked)cats.push('IT');if(document.getElementById('ch-cat-mro').checked)cats.push('MRO');if(document.getElementById('ch-cat-tailspend').checked)cats.push('Tail Spend');if(document.getElementById('ch-cat-other').checked){var v=document.getElementById('ch-cat-other-text').value.trim();cats.push(v||'Other');}return cats;};
+    function chGetData(){return{company:document.getElementById('ch-company-name').value.trim()||'[Company]',goLive:document.getElementById('ch-tl-go-live').value||document.getElementById('ch-go-live-date').value,procurement:document.getElementById('ch-procurement-system').value.trim(),contactName:document.getElementById('ch-contact-name').value.trim(),contactEmail:document.getElementById('ch-contact-email').value.trim(),categories:chGetCategories(),tone:chTone};}
+    function chFmtDate(d){if(!d)return '[Date]';var dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});}
+    function chShortDate(d){if(!d)return '--';var dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+    function chAddDays(ds,n){var d=new Date(ds+'T00:00:00');d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];}
+    function chDaysBetween(d1,d2){return Math.round((new Date(d2)-new Date(d1))/(1000*60*60*24));}
+    window.chUpdateDate=function(){var nd=document.getElementById('ch-tl-go-live').value;if(nd){document.getElementById('ch-go-live-date').value=nd;chRenderTimeline(chGetData());chRenderCatalog();}};
+    function chRenderTimeline(data){
+      var gl=data.goLive;if(!gl)return;
+      var today=new Date().toISOString().split('T')[0];
+      document.getElementById('ch-stat-days').textContent=chDaysBetween(today,gl)>0?chDaysBetween(today,gl):'Live!';
+      document.getElementById('ch-tl-go-live').value=gl;
+      var ms=[{d:chAddDays(gl,-21),t:'Pre-Launch Announcement',desc:'Introduce Amazon Business as a preferred supplier.',assets:['Pre-Launch Email','Quick Start Guide'],c:''},{d:chAddDays(gl,-14),t:'Training &amp; Enablement',desc:'Send training invitations and provide access details.',assets:['Training Invitation Email'],c:''},{d:chAddDays(gl,-7),t:'Final Reminder &amp; Visibility',desc:'Distribute posters and send final reminder.',assets:['Reminder Email','Poster','Intranet Banner'],c:'teal'},{d:gl,t:'Go-Live Day &#127881;',desc:'Official launch! Send the go-live announcement.',assets:['Go-Live Email','Poster','Banner'],c:'green'},{d:chAddDays(gl,7),t:'Week 1 Follow-Up',desc:'Check adoption and address questions.',assets:['Adoption Reminder Email'],c:'teal'},{d:chAddDays(gl,30),t:'30-Day Adoption Push',desc:'Share tips and highlight badge system.',assets:['Adoption Reminder Email'],c:'teal'}];
+      document.getElementById('ch-timeline-container').innerHTML=ms.map(function(m){return'<div class="ch-tl-item"><div class="ch-tl-dot '+m.c+'"></div><div class="ch-tl-content"><div class="ch-tl-date">'+chShortDate(m.d)+'</div><h4>'+m.t+'</h4><p>'+m.desc+'</p><div class="ch-tl-tags">'+m.assets.map(function(a){return'<span class="ch-tl-tag">'+a+'</span>';}).join('')+'</div></div></div>';}).join('');
+    }
+    var chAssets=[{id:'pre-announce',phase:'pre-launch',type:'Email',title:'Pre-Launch Announcement'},{id:'training-invite',phase:'pre-launch',type:'Email',title:'Training Invitation'},{id:'one-pager',phase:'pre-launch',type:'One-Pager',title:'Quick Start Guide'},{id:'go-live-email',phase:'launch',type:'Email',title:'Go-Live Announcement'},{id:'poster-launch',phase:'launch',type:'Poster',title:'Launch Day Poster'},{id:'banner',phase:'launch',type:'Banner',title:'Intranet Banner'},{id:'reminder',phase:'post-launch',type:'Email',title:'Adoption Reminder'}];
+    function chBuildContent(a,data){
+      var cat=data.categories.length?data.categories.join(', '):'your approved categories';
+      var po=data.procurement?'the Amazon punchout through '+data.procurement:'Amazon Business';
+      var warn=data.procurement?'Remember to use '+po+' and do not login to your personal Amazon account.':'Use your corporate credentials and do not use personal Amazon accounts.';
+      var T={formal:{g:'Dear Colleagues,',cl:'Thank you for your compliance.',sf:'Procurement Department',intro:function(c){return c+' has designated Amazon Business as the required supplier for '+cat+' effective '+chFmtDate(data.goLive)+'.';},means:'Mandatory Requirements',benefits:['Approved product selection for '+cat,'Policy-compliant pricing with spend tracking','Expedited delivery on qualifying items'],badge:'Prioritize items with the purple "Most Preferred" and green "Preferred" badges.',warning:warn},balanced:{g:'',cl:'Thank you for your support.',sf:data.contactName||'Strategic Project Solutions',intro:function(c){return c+' has partnered with Amazon Business as a preferred supplier for '+cat+'. Enjoy easy purchasing, competitive pricing, and fast shipping.';},means:'What this means for you',benefits:['Broad '+cat+' product selection','Competitive pricing with spend tracking','Free 2-day delivery on most items'],badge:'Access '+po+' and look for the purple "Most Preferred" and green "Preferred" badges.',warning:warn},casual:{g:'Hey team! &#128075;',cl:'Thanks for being awesome! &#128640;',sf:data.contactName||'Your Procurement Crew',intro:function(c){return'Great news! &#127881; '+c+' has teamed up with Amazon Business for your '+cat+' needs!';},means:"Here's what you get &#127881;",benefits:['Tons of '+cat+' products &#128722;','Great pricing that improves over time &#128176;','Free 2-day shipping + awesome support &#128666;'],badge:'Look for "Most Preferred" &#128156; and "Preferred" &#128154; badges!',warning:'&#9888;&#65039; Always use '+po+' — not personal Amazon accounts!'}};
+      var t=T[data.tone];
+      return '<div class="ch-doc-banner"><div class="ab-mark">AMAZON BUSINESS</div><h2>'+a.title+'</h2><div class="cust-name">'+data.company+'</div></div><div class="ch-doc-content">'+(t.g?'<p>'+t.g+'</p>':'')+'<p>'+t.intro(data.company)+'</p><span class="sec-head">'+t.means+'</span><ul>'+t.benefits.map(function(b){return'<li>'+b+'</li>';}).join('')+'</ul><p>'+t.badge+'</p><div class="badge-row"><span class="badge-pill badge-purple">&#9733; Most Preferred</span><span class="badge-pill badge-green">&#10003; Preferred</span></div><div class="warning-box">'+t.warning+'</div><p>'+t.cl+'</p><div class="signoff">Sincerely,<br><strong>'+t.sf+'</strong></div></div>';
+    }
+    function chRenderCatalog(){var data=chGetData();var filtered=chFilter==='all'?chAssets:chAssets.filter(function(a){return a.phase===chFilter;});document.getElementById('ch-catalog').innerHTML=filtered.map(function(a){return'<div class="ch-doc-card"><div class="ch-doc-bar"><div><span class="ch-pill-phase">'+a.phase+'</span><span class="ch-pill-type">'+a.type+'</span><h3 style="display:inline">'+a.title+'</h3></div><div><button class="ch-btn-edit" onclick="chToggleEdit(\''+a.id+'\')">&#9998; Edit</button><button class="ch-btn-dl" onclick="chDlDoc(\''+a.id+'\')">&#11015; Download</button></div></div><div class="ch-doc-body" id="ch-body-'+a.id+'">'+chBuildContent(a,data)+'</div><div class="ch-doc-edit" id="ch-edit-'+a.id+'"><textarea id="ch-ta-'+a.id+'"></textarea><div style="display:flex;justify-content:flex-end;gap:.4rem;margin-top:.5rem"><button onclick="chToggleEdit(\''+a.id+'\')" style="padding:.4rem .9rem;border:none;border-radius:6px;background:#e3e6e8;cursor:pointer">Cancel</button><button onclick="chApplyEdit(\''+a.id+'\')" style="padding:.4rem .9rem;border:none;border-radius:6px;background:#ff9900;color:#fff;cursor:pointer">Apply</button></div></div></div>';}).join('');}
+    window.chToggleEdit=function(id){var ed=document.getElementById('ch-edit-'+id);var ta=document.getElementById('ch-ta-'+id);var body=document.getElementById('ch-body-'+id);if(ed.classList.contains('open')){ed.classList.remove('open');}else{ta.value=body.innerHTML;ed.classList.add('open');}};
+    window.chApplyEdit=function(id){document.getElementById('ch-body-'+id).innerHTML=document.getElementById('ch-ta-'+id).value;document.getElementById('ch-edit-'+id).classList.remove('open');};
+    window.chDlDoc=function(id){var body=document.getElementById('ch-body-'+id);var blob=new Blob(['<html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;max-width:700px;margin:2rem auto;line-height:1.7}ul{margin:.5rem 0}li{margin-bottom:.4rem}.badge-pill{display:inline-block;padding:.2rem .5rem;border-radius:4px;font-size:.75rem;font-weight:700;margin-right:.3rem}.badge-purple{background:#6f42c1;color:#fff}.badge-green{background:#067d62;color:#fff}</style></head><body>'+body.innerHTML+'</body></html>'],{type:'text/html'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=id+'.html';a.click();URL.revokeObjectURL(url);};
+    window.chGenerate=function(){var name=document.getElementById('ch-company-name').value.trim();var goLive=document.getElementById('ch-go-live-date').value;if(!name){alert('Please enter a Company Name.');return;}if(!goLive){alert('Please select a Go-Live Date.');return;}if(chGetCategories().length===0){alert('Please select at least one category.');return;}document.getElementById('ch-tl-go-live').value=goLive;chRenderTimeline(chGetData());chRenderCatalog();chShowSection('ch-timeline',document.getElementById('ch-tab-timeline'));};
+  })();
+  </script>
+
 </body>
 </html>
