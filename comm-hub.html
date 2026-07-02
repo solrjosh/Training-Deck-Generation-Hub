@@ -139,11 +139,14 @@ input:focus,select:focus{outline:none;border-color:var(--ab-orange);box-shadow:0
       <div class="form-group"><label>Go-Live Date *</label><input type="date" id="go-live-date"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>POC Name <span style="font-weight:normal;color:var(--ab-muted)">(internal sender)</span></label><input type="text" id="contact-name" placeholder="e.g. Jane Smith, Procurement Manager"></div>
+      <div class="form-group"><label>Pre-Launch Email Date <span style="font-weight:normal;color:var(--ab-muted)">(optional)</span></label><input type="date" id="prelaunch-date"><div class="hint">Date the pre-launch announcement will be sent. Populates "Following our announcement on..." in launch emails.</div></div>
       <div class="form-group"><label>Procurement Policies Link <span style="font-weight:normal;color:var(--ab-muted)">(optional)</span></label><input type="text" id="policy-link" placeholder="https://..."></div>
     </div>
     <div class="form-row">
+      <div class="form-group"><label>POC Name <span style="font-weight:normal;color:var(--ab-muted)">(internal sender)</span></label><input type="text" id="contact-name" placeholder="e.g. Jane Smith, Procurement Manager"></div>
       <div class="form-group"><label>Categories in Scope</label><input type="text" id="categories" placeholder="e.g. Office Supplies, IT Peripherals"></div>
+    </div>
+    <div class="form-row">
       <div class="form-group">
         <label>Business Prime</label>
         <select id="has-prime">
@@ -323,6 +326,7 @@ function getFormData() {
   return {
     company: document.getElementById('company-name').value.trim() || '[Company]',
     goLive: document.getElementById('tl-go-live').value || document.getElementById('go-live-date').value,
+    prelaunchDate: document.getElementById('prelaunch-date').value,
     poc: document.getElementById('contact-name').value.trim() || 'NAME/TITLE',
     policyLink: document.getElementById('policy-link').value.trim(),
     categories: document.getElementById('categories').value.trim() || 'approved items',
@@ -422,7 +426,7 @@ function buildApproverPrelaunch(d) {
 }
 
 function buildApproverLaunch(d) {
-  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', 'Approver Launch') + '<div class="doc-content"><p>[Greeting],</p><p>Following our announcement on <strong>XX/XX</strong>, we\'re excited to share that the new <strong>' + d.company + ' Amazon Business account' + primeSuffix(d) + '</strong> is now available for <strong>' + d.categories + '</strong> purchasing starting today.</p>' + getStarted(d, 'new') + needHelpJoin() + trainingLinks(d) + supportFooter(d) + signoff(d) + '</div>';
+  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', 'Approver Launch') + '<div class="doc-content"><p>[Greeting],</p><p>Following our announcement on <strong>' + (d.prelaunchDate ? shortDate(d.prelaunchDate) : 'XX/XX') + '</strong>, we\'re excited to share that the new <strong>' + d.company + ' Amazon Business account' + primeSuffix(d) + '</strong> is now available for <strong>' + d.categories + '</strong> purchasing starting today.</p>' + getStarted(d, 'new') + needHelpJoin() + trainingLinks(d) + supportFooter(d) + signoff(d) + '</div>';
 }
 
 function buildApproverFollowup(d) {
@@ -434,7 +438,7 @@ function buildAdminPrelaunch(d) {
 }
 
 function buildAdminLaunch(d) {
-  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', 'Administrator Launch') + '<div class="doc-content"><p>[Greeting],</p><p>Following our announcement on <strong>XX/XX</strong>, we\'re excited to share that the new <strong>' + d.company + ' Amazon Business account' + primeSuffix(d) + '</strong> is now available for <strong>' + d.categories + '</strong> purchasing starting today.</p>' + getStarted(d, 'new') + '<p>You have been designated as an <strong>Amazon Business Administrator</strong> for your purchasing group. As an Administrator, you will be responsible for a number of features and user management.</p>' + needHelpJoin() + trainingLinks(d) + supportFooter(d) + signoff(d) + '</div>';
+  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', 'Administrator Launch') + '<div class="doc-content"><p>[Greeting],</p><p>Following our announcement on <strong>' + (d.prelaunchDate ? shortDate(d.prelaunchDate) : 'XX/XX') + '</strong>, we\'re excited to share that the new <strong>' + d.company + ' Amazon Business account' + primeSuffix(d) + '</strong> is now available for <strong>' + d.categories + '</strong> purchasing starting today.</p>' + getStarted(d, 'new') + '<p>You have been designated as an <strong>Amazon Business Administrator</strong> for your purchasing group. As an Administrator, you will be responsible for a number of features and user management.</p>' + needHelpJoin() + trainingLinks(d) + supportFooter(d) + signoff(d) + '</div>';
 }
 
 function buildAdminFollowup(d) {
@@ -450,7 +454,7 @@ function buildLaunchEmail(d, scenario) {
   var ingressCtx = (d.ingress === 'punchout' || d.ingress === 'punchout-sso') ? ' through <strong>' + d.epro + '</strong>' : '';
   var gettingStarted = getStarted(d, scenario);
   var multiMigration = scenario === 'multiuser' ? migrationInfo(d) : '';
-  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', label) + '<div class="doc-content">' + uiesLegal + '<p>[Greeting],</p><p>Following our announcement on <strong>XX/XX</strong>, we\'re excited to share that the new <strong>' + d.company + ' Amazon Business account' + primeSuffix(d) + '</strong> is now available for <strong>' + d.categories + '</strong> purchasing' + ingressCtx + ' starting today.</p>' + gettingStarted + multiMigration + needHelpJoin() + trainingLinks(d) + supportFooter(d) + signoff(d) + '</div>';
+  return buildBanner(d.company, 'Join the ' + d.company + ' Amazon Business account' + primeSuffix(d) + ' today', label) + '<div class="doc-content">' + uiesLegal + '<p>[Greeting],</p><p>Following our announcement on <strong>' + (d.prelaunchDate ? shortDate(d.prelaunchDate) : 'XX/XX') + '</strong>, we\'re excited to share that the new <strong>' + d.company + ' Amazon Business account' + primeSuffix(d) + '</strong> is now available for <strong>' + d.categories + '</strong> purchasing' + ingressCtx + ' starting today.</p>' + gettingStarted + multiMigration + needHelpJoin() + trainingLinks(d) + supportFooter(d) + signoff(d) + '</div>';
 }
 
 function buildFollowup(d) {

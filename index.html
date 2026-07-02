@@ -1492,6 +1492,20 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
       if (s.processAccessNote) {
         map.set('Employees should only access the centralized Amazon Business account through {{EPRO}} /SSO', s.processAccessNote);
         map.set('Employees should only access the centralized Amazon Business account through {{EPRO}} / {{SSO}}', s.processAccessNote);
+      } else {
+        // Auto-generate default access note based on ingress type when no custom note is provided
+        let defaultAccessNote = '';
+        if (s.ingressPunchout && eproName) {
+          // Punchout: reference the ePRO system by name
+          defaultAccessNote = `Employees should only access the centralized Amazon Business account through ${eproName}.`;
+        } else if (s.ingressDirectAccess) {
+          // Direct Access: reference amazon.com with work email
+          defaultAccessNote = 'Employees should access the centralized Amazon Business account through www.Amazon.com using their work email and Amazon Business password.';
+        }
+        if (defaultAccessNote) {
+          map.set('Employees should only access the centralized Amazon Business account through {{EPRO}} /SSO', defaultAccessNote);
+          map.set('Employees should only access the centralized Amazon Business account through {{EPRO}} / {{SSO}}', defaultAccessNote);
+        }
       }
       if (s.features.approvals && s.features.approvalsScope) map.set('{{Approvals: Some / All orders}}', s.features.approvalsScope);
       else map.set('{{Approvals: Some / All orders}}', '');
@@ -1608,8 +1622,6 @@ tr:last-child td{border-bottom:none;}code{font-family:monospace;font-size:.85em;
         const condMap = await NotesDrivenFilterEngine.extractNoteConditions(zip, osf);
         const notesDriven = NotesDrivenFilterEngine.computeRemovals(condMap, formState, osf);
         const removalSet = new Set([...hardcoded, ...notesDriven]);
-        // Req deck: slide 9 always retained
-        removalSet.delete(9);
         console.log(`[REQ] Removals — hardcoded: ${hardcoded.size}, notes: ${notesDriven.size}, total: ${removalSet.size}`);
 
         const slideManifest = await PptxManipulator.removeSlides(zip, removalSet, REQ_SLIDE_FILTER_RULES);
